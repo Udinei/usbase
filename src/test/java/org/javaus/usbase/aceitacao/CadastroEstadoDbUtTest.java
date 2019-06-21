@@ -40,7 +40,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 		driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
 
 		//  entra na tela de pesquisa
-		driver.get("http://localhost:8080/cidades");
+		driver.get("http://localhost:8090/cidades");
 	}
 
 
@@ -173,7 +173,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	}
 	
 	public void deveCancelarHaExclusaoDaCidadeCadastradaPesquisada() throws InterruptedException{
-		driver.get("http://localhost:8080/cidades");
+		driver.get("http://localhost:8090/cidades");
 		Thread.sleep(1000);
 		// drop down
     	WebElement estado = driver.findElement(By.xpath("//select[@name='estado']"));

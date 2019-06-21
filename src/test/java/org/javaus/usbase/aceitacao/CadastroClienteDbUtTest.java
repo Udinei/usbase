@@ -31,7 +31,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 		
 		driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
 		//  entra na tela de pesquisa
-		driver.get("http://localhost:8080/clientes");
+		driver.get("http://localhost:8090/clientes");
 	}
 
 	
@@ -131,7 +131,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 	
 	
 	public void deveCancelarExclusaoRegistroPesquisadoEncontrado() throws InterruptedException{
-		driver.get("http://localhost:8080/clientes");
+		driver.get("http://localhost:8090/clientes");
 		Thread.sleep(1000);
 		preencheCamposDePesquisaParaExclusao("nome","Juliana dos Santos");
 		clickButtonPesquisar("btn-primary");

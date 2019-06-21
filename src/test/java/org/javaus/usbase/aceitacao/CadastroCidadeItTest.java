@@ -16,7 +16,7 @@ public class CadastroCidadeItTest extends BaseTest  {
 	
 	@Test
 	public void setUrlCaseTest() throws Exception {
-		driver.get("http://localhost:8080/estilos");
+		driver.get("http://localhost:8090/estilos");
 	}
 	
 	@Test

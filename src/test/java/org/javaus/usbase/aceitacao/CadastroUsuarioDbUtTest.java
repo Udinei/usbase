@@ -30,7 +30,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	public static void initClass() {
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		//  entra na tela de pesquisa
-		driver.get("http://localhost:8080/usuarios");
+		driver.get("http://localhost:8090/usuarios");
 	}
 
 	
@@ -129,7 +129,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	
 	
 	public void deveCancelarExclusaoRegistroPesquisadoEncontrado() throws InterruptedException{
-		driver.get("http://localhost:8080/usuarios");
+		driver.get("http://localhost:8090/usuarios");
 		Thread.sleep(1000);
 		preencheCamposDePesquisaParaExclusao();
 		clickButtonPesquisar("btn-primary");

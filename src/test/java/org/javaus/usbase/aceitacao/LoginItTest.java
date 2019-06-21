@@ -36,7 +36,7 @@ public class LoginItTest {
 	    	
 	        driver = new ChromeDriver(options);
 
-	        driver.get("http://localhost:8080");
+	        driver.get("http://localhost:8090");
 			
 	    }
 	    

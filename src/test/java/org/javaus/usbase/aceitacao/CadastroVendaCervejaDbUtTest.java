@@ -97,7 +97,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 
 	public void deveCadastrarUmaNovaVenda() throws InterruptedException {
-		driver.get("http://localhost:8080");
+		driver.get("http://localhost:8090");
 		clickLinkMenu("Vendas");
 		clickLinkItemMenuOrLinkAba("Cadastro de venda");
 		preencheFormularioDeDados();
@@ -127,7 +127,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 	
 	public void deveCadastrarUmaCervejaParaVenda() throws InterruptedException {
-		driver.get("http://localhost:8080/cervejas");
+		driver.get("http://localhost:8090/cervejas");
 		CadastroCervejaDbUtTest cerveja = new CadastroCervejaDbUtTest();
 		cerveja.deveCadastrarUmNovoRegistro();
 	}	
@@ -135,7 +135,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	
 	
 	public void deveCadastrarUmClienteParaVenda() throws InterruptedException{
-		driver.get("http://localhost:8080/clientes");
+		driver.get("http://localhost:8090/clientes");
 		CadastroClienteDbUtTest cliente = new CadastroClienteDbUtTest();
 		cliente.deveCadastrarUmNovoCliente();
 	}
@@ -168,7 +168,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 	
 	public void deveExcluirUmItemDaVenda() throws InterruptedException{
-		driver.get("http://localhost:8080");
+		driver.get("http://localhost:8090");
 		clickLinkMenu("Vendas");
 		Thread.sleep(100);
 		clickLinkItemMenuOrLinkAba("Pesquisa venda", wait, action);
@@ -207,7 +207,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		// desloga do sistema
 		clickLogOut(); 
 		// loga no sistema como usario vendedor
-		driver.get("http://localhost:8080");
+		driver.get("http://localhost:8090");
 		login.loginFluxoPrincipal("miguel@nn.com","miguel");
 		
 		// Tenta cancelar venda feita pelo usuario admin
@@ -231,7 +231,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		// desloga do sistema
 		clickLogOut(); 
 		// loga no sistema como usario vendedor
-		driver.get("http://localhost:8080");
+		driver.get("http://localhost:8090");
 		login.loginFluxoPrincipal("admin@usbase.com","admin");
 		
 		// Tenta cancelar venda feita pelo usuario admin
@@ -327,7 +327,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 	
 	private void deveCadastrarOutraCervejaSeraUsadaNaEdicao() throws InterruptedException{
-		driver.get("http://localhost:8080/cervejas");
+		driver.get("http://localhost:8090/cervejas");
 		CadastroCervejaDbUtTest cerveja = new CadastroCervejaDbUtTest();
 		
 		cerveja.deveCadastrarUmNovoRegistroNovaCerveja();
