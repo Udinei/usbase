@@ -1,34 +1,10 @@
 package org.javaus.usbase.controller;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import org.javaus.usbase.controller.page.PageWrapper;
 import org.javaus.usbase.controller.validator.VendaValidator;
@@ -48,6 +24,26 @@ import org.javaus.usbase.service.CadastroVendaService;
 import org.javaus.usbase.session.TabelasItensSession;
 import org.javaus.usbase.util.MakeUrl;
 import org.javaus.usbase.util.MessagesUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/vendas")
@@ -182,15 +178,19 @@ public class VendasController {
         cerveja.setUrlThumbnailFoto(urlFinalFoto);
 		tabelaItens.adicionarItem(uuid, cerveja, 1);
 		
-		return mvTabelaItensVenda(uuid);
+		return mvTabelaItensVenda(uuid, null);
 	}
 	
 
 	@PutMapping("/item/{codigoCerveja}")
-	public ModelAndView alterarQuantidadeItem(@PathVariable("codigoCerveja") Cerveja cerveja, @RequestParam Integer quantidade, @RequestParam String uuid){
+	public ModelAndView alterarQuantidadeItem(@PathVariable("codigoCerveja") Cerveja cerveja, @RequestParam Venda codigoVenda, @RequestParam Integer quantidade, @RequestParam String uuid){
+	    
+		// recupera a venda da lista de itens, a venda sera usada para controle da exibição do bloco de exclusao de itens
+		Venda venda = vendas.findOne(codigoVenda.getCodigo());
+		//cerveja.getQuantidadeEstoque();
 		tabelaItens.alterarQuantidadeItens(uuid, cerveja, quantidade);
 		
-		return mvTabelaItensVenda(uuid);
+		return mvTabelaItensVenda(uuid, venda);
 	}
 
 	
@@ -202,23 +202,33 @@ public class VendasController {
 	public ModelAndView excluirItem(@PathVariable("codigoCerveja") Cerveja cerveja, @PathVariable String uuid){
 		tabelaItens.excluirItem(uuid, cerveja);
 		
-		return mvTabelaItensVenda(uuid);
+		return mvTabelaItensVenda(uuid, null);
 		
 	}
 	
-	private ModelAndView mvTabelaItensVenda(String uuid) {
+	private ModelAndView mvTabelaItensVenda(String uuid, Venda venda) {
 		ModelAndView mv = new ModelAndView("venda/TabelaItensVenda");
-		mv.addObject("itens", tabelaItens.getItens(uuid));
-		mv.addObject("valorTotal", tabelaItens.getValorTotal(uuid));
+		List<ItemVenda> lista = tabelaItens.ordenaListaItensPorSku(tabelaItens.getItens(uuid));
+		
+		mv.addObject("itens", lista);
+    	mv.addObject("valorTotal", tabelaItens.getValorTotal(uuid));
+		
+		if(venda != null){
+			mv.addObject("venda", venda);	
+		}
+						
 		return mv;
 	}
+	
+
 
 	private void validarVenda(Venda venda) {
 			// recupera os itens da venda da tabela de intens, e seta a venda nos itens, ao salvar a venda 
-			venda.adicionarItens(tabelaItens.getItens(venda.getUuid()));
+			venda.adicionarItens(tabelaItens.ordenaListaItensPorSku(tabelaItens.getItens(venda.getUuid())));
 			
 			// calcula o valor total da venda
 			venda.calcularValorTotal();
+			
 					
 	}
 	
@@ -242,7 +252,7 @@ public class VendasController {
 	public ModelAndView editar(@PathVariable Long codigo){
 		// recupera a venda com os itens
 		Venda venda = vendas.buscarComItens(codigo);
-		
+		System.out.println(">>>>>> a editar venda " + codigo);
 		// gera um uuid de sessao do usuario, para a venda recuperada caso nao exista
 		setUuid(venda);
 		

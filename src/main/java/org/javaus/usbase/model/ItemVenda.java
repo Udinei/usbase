@@ -34,7 +34,6 @@ public class ItemVenda   {
 	@JoinColumn(name = "codigo_venda")
 	private Venda venda; 
 	
-	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -73,7 +72,23 @@ public class ItemVenda   {
 		return valorUnitario.multiply(new BigDecimal(quantidade));
 	}
 	
+	public Boolean getQtdEstoqueAbaixoDaVenda(){
+		 if((cerveja.getQuantidadeEstoque() - quantidade) < 0){
+            return true;
+		 }
+		 return false;
+	}
 	
+
+	public String getQtdEstoqueAbaixoDaVendaMsg(){
+		String msg = "";
+		
+		if(getQtdEstoqueAbaixoDaVenda()){
+			msg = "Quantidade acima do estoque! Estoque produto: " + cerveja.getQuantidadeEstoque();
+		}
+		
+		return msg;
+	}
 	
 	
 	public Venda getVenda() {
