@@ -219,7 +219,16 @@ public class Venda implements Serializable {
 	}
 
 	public List<ItemVenda> getItens() {
-		return itens;
+		return ordenaListaItensPorNome(itens);
+	}
+	
+	public List<ItemVenda> ordenaListaItensPorNome(List<ItemVenda> itens) {
+
+	    itens.stream()
+	            .sorted((i1, i2) -> i1.getCerveja().getNome().compareTo(i2.getCerveja().getNome()));
+	            //.forEach(p -> System.out.println(p.getCerveja().getNome()));
+	    
+	    return itens;
 	}
 
 	public void setItens(List<ItemVenda> itens) {
