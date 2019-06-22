@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
@@ -60,7 +61,9 @@ public class VendasImpl implements VendasQueries {
 	public Venda buscarComItens(Long codigo) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Venda.class);
 		criteria.createAlias("itens", "i", JoinType.LEFT_OUTER_JOIN); // Fazendo relacionamento com a tabela grupos
+		criteria.createAlias("itens.cerveja", "c", JoinType.LEFT_OUTER_JOIN); // Fazendo relacionamento de itens com cerveja
 		criteria.add(Restrictions.eq("codigo", codigo));
+		criteria.addOrder(Order.asc("c.sku"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // Agrupa por usuario e remove
 		return (Venda) criteria.uniqueResult();
 		
