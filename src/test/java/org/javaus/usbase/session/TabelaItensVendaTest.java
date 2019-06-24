@@ -1,14 +1,13 @@
 package org.javaus.usbase.session;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
+import org.javaus.usbase.model.Cerveja;
+import org.javaus.usbase.model.Venda;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.javaus.usbase.model.Cerveja;
-import org.javaus.usbase.session.TabelaItensVenda;
 
 public class TabelaItensVendaTest {
 
@@ -72,6 +71,7 @@ public class TabelaItensVendaTest {
 	@Test
 	public void deveAterarQuantidadeDoItem() throws Exception {
 		Cerveja c1 = new Cerveja();
+	
 		c1.setCodigo(1L);
 		c1.setValor(new BigDecimal("4.50"));
 		 

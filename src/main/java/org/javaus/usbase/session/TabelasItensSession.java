@@ -1,15 +1,16 @@
 package org.javaus.usbase.session;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
+import java.util.stream.Collectors;
 
 import org.javaus.usbase.model.Cerveja;
 import org.javaus.usbase.model.ItemVenda;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
 @SessionScope
 @Component
@@ -30,6 +31,7 @@ public class TabelasItensSession {
 		
 		TabelaItensVenda tabela = buscarTabelaPorUuid(uuid);
 		tabela.alterarQuantidadeItens(cerveja, quantidade);
+		
 		
 	}
 	
@@ -57,7 +59,15 @@ public class TabelasItensSession {
 		return tabela;
 	}
 
-
+	public List<ItemVenda> ordenaListaItensPorSku(List<ItemVenda> itens) {
+		List<ItemVenda> list = new ArrayList<ItemVenda>();
+		
+		list =  itens.stream().sorted((i1, i2) -> i1.getCerveja().getSku().compareTo(i2.getCerveja().getSku()))
+				  .collect(Collectors.toList());
+                   //.forEach(p -> System.out.println(p.getCerveja().getSku()));
+	    
+	    return list;
+	}
 
 	
 }

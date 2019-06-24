@@ -45,6 +45,7 @@ class TabelaItensVenda {
 			//altera a quantidade somando a quantidade atual + a nova quantidade informada 
 			itemVenda.setQuantidade(itemVenda.getQuantidade() + quantidade);
 			
+			
 		// 	adicione um novo item no carrinho
 		}else{
 			itemVenda = new ItemVenda();
@@ -64,15 +65,16 @@ class TabelaItensVenda {
 		return itens.stream()
 				.filter(i -> i.getCerveja().equals(cerveja))
 				.findAny();
-		
 	}
+
 	
 	
 	public void alterarQuantidadeItens(Cerveja cerveja, Integer quantidade){
 		// filtra e acessa o item
 		ItemVenda itemVenda = buscarItemPorCerveja(cerveja).get();
 		itemVenda.setQuantidade(quantidade);
-		
+	
+		System.out.println("venda do item >>>>> " + itemVenda.getVenda());
 		
 	}
 	
@@ -82,7 +84,7 @@ class TabelaItensVenda {
 		    percorre a lista de itens e retorna o indice, do item igual ao passado no parametro do metodo */
 		int indice = IntStream.range(0, itens.size())
 				.filter(i -> itens.get(i).getCerveja().equals(cerveja)) 
-		        .findAny().getAsInt(); // retorna o valor do indice
+		        .findAny().getAsInt(); // getAsInt forca o retornar o valor do indice
 		
 		// remove o item da lista, pelo indice do item passado como parametro
 		itens.remove(indice);
@@ -96,7 +98,6 @@ class TabelaItensVenda {
 		return itens;
 	}
 
-	
 
 
 	@Override

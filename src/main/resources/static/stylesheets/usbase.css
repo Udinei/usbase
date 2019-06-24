@@ -283,6 +283,13 @@
 	text-align: right;
 }
 
+.bw-tabela-cerveja-msg-erro-quantidade {
+	font-weight: 300;
+	font-size: 1em;
+	color: #FF4500;
+}
+
+
 .bw-tabela-cerveja-valor-pequeno {
 	font-weight: 300;
 	font-size: 1em;

@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.google.common.base.Optional;
+
 import org.javaus.usbase.dto.VendaMes;
 import org.javaus.usbase.dto.VendaOrigem;
 import org.javaus.usbase.model.Venda;
@@ -26,5 +28,6 @@ public interface VendasQueries {
 	public List<VendaMes> totalPorMes();
 
 	public List<VendaOrigem> totalPorOrigem();
+
 	
 }

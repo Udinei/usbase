@@ -68,7 +68,10 @@ UsBase.TabelaItens = (function(){
 	function onQuantidadeItemAlterado(evento){
 		var input = $(evento.target); // obtem elemento html em que ocorreu o  evento  onblur campo "quantidade"
 		var quantidade = input.val(); // obtem o valor do elemento 
-			
+	
+		var tabelaItem = $('.js-tabela-item');
+		var codigoVenda = tabelaItem.data('codigo-venda');
+		
 		// não permite quantidade ser menor ou igual a zero
 		if(quantidade <= 0){
 			input.val(1);
@@ -83,19 +86,18 @@ UsBase.TabelaItens = (function(){
 		
 		// submete ao servidor a requisicao via ajax
 		var resposta = $.ajax({
-			url: 'item/'+ codigoCerveja,           // // passa o codigo do item - outra solucao1 > + "/?" + urlComplemento,   
+			url: 'item/'+ codigoCerveja,           // passa o codigo do item - outra solucao1 > + "/?" + urlComplemento,   
 			method: 'PUT',                         // requisicao de alteracao de dados
 			data: {
 				
 				     quantidade: quantidade,       // envia dados - quantidade e uuid  
-				     uuid: this.uuid
+				     uuid: this.uuid,
+				     codigoVenda: codigoVenda
 
 			},
-		    
-
 				
 		});
-		
+				
 		resposta.done(onItemAtualizadoNoServidor.bind(this));  // ao receber a resposta do servidor, atualiza na tela o html do carrinho de compras "TabelaItensVenda"  
 	}
 	
