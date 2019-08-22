@@ -46,6 +46,7 @@ public class EstilosController {
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo(Estilo estilo){
+		// ModelAndView serve para especificar a view que será renderizada e quais os dados ela utilizará para isso.
 		return new ModelAndView("estilo/CadastroEstilo");
 	}
 	
@@ -61,28 +62,32 @@ public class EstilosController {
 			cadastroEstiloService.salvar(estilo);	
 			
 		} catch (NomeEstiloJaCadastradoException e){ //captura a exception
-            // atributo que deu problema na regra de negocio
+            // nome é atributo que deu problema na regra de negocio
 			result.rejectValue("nome", e.getMessage(), e.getMessage()); // injeta mensagem na view do objeto
 			return novo(estilo);  // retorna objeto na view e exibe mensagem de dados duplicados
 		}
-		
-	        
-		//attributes.addFlashAttribute("mensagem", "Estilo salvo com sucesso!");
+	
 		attributes.addFlashAttribute("mensagem", messagesUtil.getMessage("msg.salvo.sucesso", "Estilo"));
 		return new ModelAndView("redirect:/estilos/novo");
 	}
 	
-	/** @RequestBody - Necessario para receber um objeto via json e converter em objeto jav, usa a API do Jackson
-	    @ResponseEntity<?> - Ajuda a definir status de erro para quem chamou o metodo erros: 400 , 200, 500 etc */
+	/** Para usar Json colocar no maven a API do Jackson para converter objetos Json em objetos Java 
+	 *  @RequestBody -  serializa o objeto retornado para JSON, chega no metodo em JSON e ja é convertido em objeto java:   
+	 *  @ResponseEntity<?> - envia uma resposta completa, com status, com cabeçalho e corpo, muita utilizada me microservice */
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody ResponseEntity<?> salvar(@RequestBody @Valid Estilo estilo, BindingResult result){
+		// em result vira os erro de validação dos campos em tela definidos nas entidades model
 		if(result.hasErrors()){
 			return ResponseEntity.badRequest().body(result.getFieldError("nome").getDefaultMessage());	// envia msg de erros para a view
 		}
 		
-		// caso o estilo ja exista cadastrado o exception sera tratado pela classe ControllerAdviceExceptionHandler
+		// Uma forma elegante e generica de tratar um exception seria o uso de um Handler
+		// como nesse caso ao salvar um estilo e retornar um ResponseEntity caso haja um erro 
+		// o mesmo sera tratado pela classe ControllerAdviceExceptionHandler em vez de usar um try/catch
+		// - Caso o estilo ja exista cadastrado 
 		estilo = cadastroEstiloService.salvar(estilo);
-
+          
+		// retorna codigo 200 ao browser ResponseEntity.ok
 		return ResponseEntity.ok(estilo);
 		
 	}
@@ -100,7 +105,7 @@ public class EstilosController {
 	
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo){
-		Estilo estilo = estilos.findOne(codigo);
+		Estilo estilo = estilos.getOne(codigo);
 		
 		ModelAndView mv = novo(estilo);
 		mv.addObject(estilo);

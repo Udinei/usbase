@@ -16,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import org.javaus.usbase.security.AppUserDetailsService;
 
-
+// habilita a segurança no sistema (login padrao)
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = AppUserDetailsService.class)
 @EnableGlobalMethodSecurity(prePostEnabled = true) //permite que a anotacao PreAuthorize seja utilizada no service
@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		auth.inMemoryAuthentication()
 //		.withUser("admin").password("admin").roles("CADASTRO_CLIENTE");
 		
+		// passwordEncoder - informa que senha esta criptografada
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 		
 	}
@@ -74,10 +75,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))  // autorizando e evitando erro csrf
 			.and()
-		.exceptionHandling().accessDeniedPage("/403") // vai para essa url para acesso negado, essa url deve ser mapeada no controller
-			.and()
-		.sessionManagement()
-			.invalidSessionUrl("/login");  // sessao invalida, redireciona para a pagina de login
+			.sessionManagement()
+			.invalidSessionUrl("/login");  // sessao invalida, redireciona para a pagina de login, o tempo de duracao da sessao do user é configurada no web.xml
 
 		
 		// O codigo abaixo controla a quantidade de acesso que um

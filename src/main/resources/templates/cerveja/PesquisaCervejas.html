@@ -36,6 +36,7 @@
 		
 			
 		<div class="container-fluid">
+		     <!--  th:object faz o bind do objeto java com a pagina html, th:field faz o bind dos campos-->
 			<form method="GET" th:object="${cervejaFilter}">
 			
 				<div class="row">
@@ -78,7 +79,7 @@
 									<label th:for="|id_${origem}|" th:text="${origem.descricao}">Nacional</label>
 								</div>
 							</th:block>
-							<!-- caso nenhuma origem for selecionada o radio todas sera checado "selecionado"-->
+							<!-- caso nenhuma origem for selecionada a opção Todas do radioButton sera "selecionada" -->
 							<div class="radio radio-inline">
 								<input id="todasOrigens" type="radio" th:checked="*{origem} == null" name="origem"/>
 								<label for="todasOrigens">Todas</label>
@@ -106,9 +107,12 @@
 					<tr>
 						<th class="table-cervejas-col-foto"></th>
 						<th class="table-cervejas-col-sku">
+						
 						 	<usbase:order page="${pagina}" field="sku" text="SKU"/>
 						</th>
 						<th class="table-cervejas-col-nome">
+						   <!-- OrderElementTagProcessor e o componente criado para ordenacao
+						        Ordenacao.html e o fragment html utilizado,  tag <usbase> definida em UsBaseDialect  -->
 						 	<usbase:order page="${pagina}" field="nome" text="Nome"/>
 						</th>
 						<th class="table-cervejas-col-estilo">Estilo</th>
@@ -149,6 +153,8 @@
 		</div>
 		
 		<div class="col-sm-12  text-center" th:if="${not pagina.vazia}">
+		    <!-- PaginacaoElementTagProcessor e o componente criado para paginacao
+			     Paginacao.html e o fragment html utilizado, tag <usbase> definida em UsBaseDialect  -->
 			<usbase:paginacao page="${pagina}" />
 		</div>
 		

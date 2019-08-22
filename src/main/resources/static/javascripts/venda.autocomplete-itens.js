@@ -17,9 +17,9 @@ UsBase.Autocomplete = (function(){
 	Autocomplete.prototype.iniciar = function (){
 		var options = {
 					  url: function(skuOuNome) 
-					 { // para url: enviar um parametro de consulta a mesma deve receber uma funcao
-					 	return this.skuOuNomeInput.data('url') + '?skuOuNome=' + skuOuNome;
-					 }.bind(this),
+					  		{ // para url: enviar um parametro de consulta a mesma deve receber uma funcao
+						  		return this.skuOuNomeInput.data('url') + '?skuOuNome=' + skuOuNome;
+					  		}.bind(this),
 				     getValue: 'nome',    // abrituto que sera exibido no input do autocomplete
 			  	     minCharNumber: 3,    // inicia a consulta apos 3 caracteres digitados
 				     requestDelay: 300,   // somente apos 300 milsec. apos a digitacao faz a busca, evita muitos request quando usuario digita rapido demais
@@ -33,7 +33,7 @@ UsBase.Autocomplete = (function(){
 					      method: template.bind(this)  // html retornado pelo handlebars ja com os dados das tags handlebar compilados
 				      },
 				     list: 
-				     {    // se o evento "item-selecionado" for disparado em qualquer parte do sistema, chama funcao onItemSelecionado 
+				     {    //O evento onChooseEvent informa que foi selecionado um item, trata chamando funcao onItemSelecionado 
 				     	  onChooseEvent: onItemSelecionado.bind(this) 
 				     }		
 		};

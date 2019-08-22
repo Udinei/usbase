@@ -33,9 +33,11 @@ public class FotosController {
 	    */
 	@PostMapping
 	public DeferredResult<FotoDTO> upload(@RequestParam("files[]") MultipartFile[] files){
+		// DeferredResult - aguarda resultado do metodo 
 		DeferredResult<FotoDTO> resultado = new DeferredResult<>();
 		
-		// cria thread para a classe FotoStorageRunnable que executa o processo de renomeacao salvamento da foto
+		// cria thread para a classe FotoStorageRunnable que executa o processo de renomeacao 
+		// salvamento da foto de forma assincrona
 		Thread thread = new Thread(new FotoStorageRunnable(files, resultado, fotoStorage));
 		thread.start();
 		
@@ -48,6 +50,8 @@ public class FotosController {
 	    sem paramentro ex: recuperar (@PathVariable ("nome") String nomeX) dai o nome do paramentro do metodo poderia ser outro */
 	@GetMapping("/{nome:.*}") // usando expressao regular"{nome:.*}" para obter arquvivo . qualquer extensao
 	public byte[] recuperar(@PathVariable String nome){
+		 System.out.println(">>>>>> recuperar o nome da foto " + nome);
+		 // TODO: Enviar uma msg para o operador, quando nao conseguir recuperar a foto porque execedeu o tamanho suportado por byte[]
 		return fotoStorage.recuperar(nome);
 	}
 	

@@ -23,7 +23,7 @@ import org.javaus.usbase.model.Estado;
 import org.javaus.usbase.repository.Estados;
 import org.javaus.usbase.service.CadastroEstadoService;
 
-public class CadastroEstadoDbUtTest extends BaseTest { 
+public class CadastroCidadeDbUtTest extends BaseTest { 
 
 	
 	@Autowired
@@ -37,7 +37,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	public static void initClass() {
 			
 		// controlal o tempo maximo em que o teste tem que rodar
-		driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 
 		//  entra na tela de pesquisa
 		driver.get("http://localhost:8090/cidades");
@@ -84,7 +84,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 		
 		// click no botao salvar sem preencher nenhum campo
 		driver.findElement(By.className("btn-primary")).click();
-		Thread.sleep(200);
+		//ep(200);
 		
 		// valida campos obrigatorios Estado e Nome
 		List<String> validaCampos = Arrays.asList("estado, M", "nome, M");
@@ -92,7 +92,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	}
 	
 	
-	public void deveCadastrarUmaNovaCidade() {
+	public void deveCadastrarUmaNovaCidade() throws InterruptedException {
 		// seleciona estado Goias
 		WebElement estado = driver.findElement(By.xpath("//select[@name='estado']"));
     	new Select(estado).selectByVisibleText("Goias");
@@ -107,7 +107,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	
 	
 	public void deveValidarExecaoCidadeJaCadastrada() throws InterruptedException {
-		//Thread.sleep(2000);
+		////ep(2000);
 		// selecina na combobox o estado 
     	WebElement estado = driver.findElement(By.xpath("//select[@name='estado']"));
     	new Select(estado).selectByVisibleText("Goias");
@@ -140,10 +140,11 @@ public class CadastroEstadoDbUtTest extends BaseTest {
     	
 	
 	/** A alteração realizada por esse metodo sera desfeita pelo dbunit, dispensado a necessidade reeditar o registro
-	 *  para o estado antes da edição (alteracao) */
-	public void deveEditarUmaCidadeCadastrada(){
+	 *  para o estado antes da edição (alteracao) 
+	 * @throws InterruptedException */
+	public void deveEditarUmaCidadeCadastrada() throws InterruptedException{
 		// click no icone "X" (link) para excluir regristro de teste   		
-		//Thread.sleep(1000);
+		////ep(1000);
 		driver.findElement(By.xpath("//*[@class='glyphicon glyphicon-pencil']")).click();
      	// altera o nome da ciade para Goiânia I
     	driver.findElement(By.name("nome")).sendKeys(" I");
@@ -174,7 +175,7 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	
 	public void deveCancelarHaExclusaoDaCidadeCadastradaPesquisada() throws InterruptedException{
 		driver.get("http://localhost:8090/cidades");
-		Thread.sleep(1000);
+		//ep(1000);
 		// drop down
     	WebElement estado = driver.findElement(By.xpath("//select[@name='estado']"));
     	new Select(estado).selectByVisibleText("Goias");
@@ -199,18 +200,23 @@ public class CadastroEstadoDbUtTest extends BaseTest {
 	public void deveExcluirCidadeCadastradaPesquisada() throws InterruptedException{
 		
 			// click no icone "X" (link) para excluir regristro de teste   		
-			Thread.sleep(1000);
-			driver.findElement(By.xpath("//*[@data-objeto='Goiânia I']")).click();
+			//ep(1000);
+			//driver.findElement(By.xpath("//*[@data-objeto='Goiânia I']")).click();
 			// alert da msg de exclusao do registro foi exibida
-			//Thread.sleep(1000);
-			assertTrue(login.isElementPresent(By.xpath("//button[text()='Sim, exclua agora!']"))); 
+			////ep(1000);
+			//assertTrue(login.isElementPresent(By.xpath("//button[text()='Sim, exclua agora!']"))); 
 	        // click no botao sim 
-			driver.findElement(By.xpath("//button[text()='Sim, exclua agora!']")).click(); 
+			//driver.findElement(By.xpath("//button[text()='Sim, exclua agora!']")).click(); 
 			// alert da msg de confirma a exclusao
-			assertTrue(login.isElementPresent(By.xpath("//button[text()='OK']")));
+			//assertTrue(login.isElementPresent(By.xpath("//button[text()='OK']")));
 			// alert de exclusao com sucesso e botao ok
-			//Thread.sleep(1000);
-			driver.findElement(By.xpath("//button[text()='OK']")).click();
+			////ep(1000);
+			//driver.findElement(By.xpath("//button[text()='OK']")).click();
+		// click no icone "X" (link) para excluir regristro de teste
+		clickButtonXTelaPesquisarParaExcluirRegistroPesquisado();
+		// alert da msg de exclusao do registro foi exibida
+		clickButtonLabel("Sim, exclua agora!");
+		 clickButtonLabel("OK");
 		}
 		
 	/** Esse metodo faz um simples teste de verificação da persistencia e injeção do spring (@Autowire) 

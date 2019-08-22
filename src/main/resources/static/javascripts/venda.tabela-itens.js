@@ -1,3 +1,6 @@
+// Esse java script nao começa com Brewer = Brewer || {}
+// porque que objeto Brewer precisa estar criado ou seja a tabela de itens precisa ser notificada 
+// que um item selecionado foi selecionado no autocomplete
 UsBase.TabelaItens = (function(){
 	
 	function TabelaItens(autocomplete){
@@ -10,7 +13,10 @@ UsBase.TabelaItens = (function(){
 	}
 	
 	TabelaItens.prototype.iniciar = function (){
-		this.autocomplete.on('item-selecionado', onItemSelecionado.bind(this)); // dispara o evento item-selecionado, e onItemSelecionado recebe seu retorno 
+		// quando o evento item-selecionado, for disparado no javascrip (venda.autocomplete-itens) 
+		// em this.emitter.trigger('item-selecionado',this.skuOuNomeInput.getSelectedItemData()); 
+		// retorna o objeto selecionado para a function onItemSelecionado contida aqui em venda.tabela-itens.js
+		this.autocomplete.on('item-selecionado', onItemSelecionado.bind(this));  
 		
 		bindQuantidade.call(this);
 		bindTabelaItem.call(this);
@@ -71,6 +77,9 @@ UsBase.TabelaItens = (function(){
 	
 		var tabelaItem = $('.js-tabela-item');
 		var codigoVenda = tabelaItem.data('codigo-venda');
+		if(codigoVenda == undefined){
+			codigoVenda = 0;
+		}
 		
 		// não permite quantidade ser menor ou igual a zero
 		if(quantidade <= 0){
@@ -97,7 +106,8 @@ UsBase.TabelaItens = (function(){
 			},
 				
 		});
-				
+		
+		console.log(">>> codigo venda "+ codigoVenda)
 		resposta.done(onItemAtualizadoNoServidor.bind(this));  // ao receber a resposta do servidor, atualiza na tela o html do carrinho de compras "TabelaItensVenda"  
 	}
 	

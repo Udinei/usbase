@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,7 +36,7 @@ public class LoginItTest {
 	    	options.setExperimentalOption("prefs", prefs);
 	    	
 	        driver = new ChromeDriver(options);
-
+            //driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 	        driver.get("http://localhost:8090");
 			
 	    }
@@ -44,13 +45,13 @@ public class LoginItTest {
 	    @Test
 	    public void loginFluxoPrincipal() throws InterruptedException{
 			
-			Thread.sleep(2000);
+			//ep(2000);
 			driver.findElement(By.name("username")).sendKeys("admin@usbase.com");
-		    driver.findElement(By.name("password")).sendKeys("admin");
+		    driver.findElement(By.name("password")).sendKeys("a13i2");
 		    				
 		    driver.findElement(By.className("btn-primary")).click();
 		    
-		    Thread.sleep(2000);
+		    //ep(2000);
 		    assertEquals(isElementPresent(By.className("fa-sign-out")), true);
 		    
 		    driver.findElement(By.className("fa-sign-out")).click(); // faz logout
@@ -79,7 +80,7 @@ public class LoginItTest {
 		    @AfterClass
 		    public static void cleanUp() throws InterruptedException{
 		        if (driver != null) {
-		        	Thread.sleep(10000);
+		        	//ep(10000);
 		            driver.close();
 		            driver.quit();
 		        }
@@ -88,27 +89,27 @@ public class LoginItTest {
 			private void validaSoEmailLogin() throws InterruptedException {
 
 				// entrada errada email
-				Thread.sleep(2000);
+				//ep(2000);
 				driver.findElement(By.name("username")).sendKeys("email@errado.com"); 
 				
 			    // tenta acessar sistema
-				Thread.sleep(2000);
+				//ep(2000);
 			    driver.findElement(By.className("btn-primary")).click();
 				
 				// exibe mensagem de validacao
-				Thread.sleep(2000);
+				//ep(2000);
 				assertEquals("O E-mail e/ou a senha não conferem.", driver.findElement(By.xpath("//div[contains(text(),'O E-mail e/ou a senha não conferem.')]")).getText());
 				
 				/** entrada vazia ou nullo */
-				Thread.sleep(2000);
+				//ep(2000);
 				driver.findElement(By.name("username")).sendKeys(""); 
 				
 			    // tenta acessar sistema
-				Thread.sleep(2000);
+				//ep(2000);
 			    driver.findElement(By.className("btn-primary")).click();
 				
 				// exibe mensagem de validacao
-				Thread.sleep(2000);
+				//ep(2000);
 				assertEquals("O E-mail e/ou a senha não conferem.", driver.findElement(By.xpath("//div[contains(text(),'O E-mail e/ou a senha não conferem.')]")).getText());
 
 			}
@@ -116,27 +117,27 @@ public class LoginItTest {
 			
 			private void validaSoSenhaLogin() throws InterruptedException {
 				// entrada errada email
-				Thread.sleep(2000);
+				//ep(2000);
 				driver.findElement(By.name("password")).sendKeys("senhaErrada"); 
 				
 			    // tenta acessar sistema
-				Thread.sleep(2000);
+				//ep(2000);
 			    driver.findElement(By.className("btn-primary")).click();
 				
 				// validacao email
-				Thread.sleep(2000);
+				//ep(2000);
 				assertEquals("O E-mail e/ou a senha não conferem.", driver.findElement(By.xpath("//div[contains(text(),'O E-mail e/ou a senha não conferem.')]")).getText());
 				
 				/** entrada vazia ou nullo */
-				Thread.sleep(2000);
+				//ep(2000);
 				driver.findElement(By.name("password")).sendKeys(""); 
 				
 			    // tenta acessar sistema
-				Thread.sleep(2000);
+				//ep(2000);
 			    driver.findElement(By.className("btn-primary")).click();
 				
 				// validacao email
-				Thread.sleep(2000);
+				//ep(2000);
 				assertEquals("O E-mail e/ou a senha não conferem.", driver.findElement(By.xpath("//div[contains(text(),'O E-mail e/ou a senha não conferem.')]")).getText());
 				
 			}

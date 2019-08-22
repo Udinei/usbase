@@ -29,7 +29,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 	@BeforeClass
 	public static void initClass() {
 		
-		driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
+		//driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		//  entra na tela de pesquisa
 		driver.get("http://localhost:8090/clientes");
 	}
@@ -69,7 +69,8 @@ public class CadastroClienteDbUtTest extends BaseTest {
 	}
 	
 	public void deveExibirMsgDePrenchimentoCamposObrigatorio() throws InterruptedException{
-		clickButtonAcessaFormularioDeCadastro("Novo cliente");
+		//clickButtonAcessaFormularioDeCadastro("Novo cliente");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo cliente");
 		clickButtonSalvarClassName("btn-primary");
 		List<String> validCampos = Arrays.asList("Nome", "Tipo pessoa",	"CPF/CNPJ");
 		validaCamposObrigatorios(validCampos);
@@ -78,7 +79,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 
 	
 	public void deveCadastrarUmNovoCliente() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Novo cliente");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo cliente");
 		preencheFormularioDadosCliente();
 		clickButtonSalvarClassName("btn-primary");
 
@@ -89,7 +90,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 	}
 	
 	public void deveValidarExecaoClienteJaCadastrado() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Novo cliente");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo cliente");
 		preencheFormularioDadosCliente();
 		clickButtonSalvarClassName("btn-primary");
 		
@@ -98,7 +99,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 		clickButtonSairFormularioCadastro("btn-default");  
 	}
 	
-	public void devePesquisarRegistroCadastrado(){
+	public void devePesquisarRegistroCadastrado() throws InterruptedException{
 	   // recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa("nome","Juliana dos Santos");
 		clickButtonSalvarClassName("btn-primary");
@@ -121,7 +122,7 @@ public class CadastroClienteDbUtTest extends BaseTest {
 	}
 	
 	
-	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada(){
+	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada() throws InterruptedException{
 		// recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa("nome","Juliana dos SantosI");
 		clickButtonSalvarClassName("btn-primary");

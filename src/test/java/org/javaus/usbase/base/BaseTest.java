@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
-import javax.validation.constraints.AssertTrue;
-
+import org.javaus.usbase.aceitacao.LoginDeTest;
+import org.javaus.usbase.util.MessagesUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.By;
@@ -25,15 +26,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
-import org.javaus.usbase.aceitacao.Login;
-import org.javaus.usbase.util.MessagesUtil;
+import com.thoughtworks.selenium.webdriven.commands.IsVisible;
 
 public class BaseTest  extends UsBaseApplicationTest{
+	
 
 	protected static DbUnitHelper dbUnitHelper;
 	protected static WebDriver driver;
 	protected MessagesUtil messagesUtil = new MessagesUtil();
-	public static Login login = new Login();
+	public static LoginDeTest login = new LoginDeTest();
 	protected List<String> infoDB = null;
 	public static WebDriverWait wait;
 	public static Actions action;
@@ -57,14 +58,15 @@ public class BaseTest  extends UsBaseApplicationTest{
 		driver = login.getWebdriver(); 
 		wait = new WebDriverWait(driver, 10);
 		action = new Actions(driver);
-					
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+	
 	}
 	
 	 
     @AfterClass
     public static void cleanUp() throws InterruptedException{
         if (driver != null) {
-    	Thread.sleep(5000);
+    	//ep(5000);
     		driver.close();
     		driver.quit();
         }
@@ -153,12 +155,74 @@ public class BaseTest  extends UsBaseApplicationTest{
 		driver.findElement(By.className(className)).click();
 	}
 	
+	/**
+	 * Esse metodo aguarda o span aparecer na tela e
+	 * realiza o click em um texto contido dentro da tag span,
+	 *  cujo span pode estar sendo usado em um link
+	 *  Ex:
+	 *  <a class="btn  btn-default" href="/estilos/novo">
+	 *     <i class="glyphicon  glyphicon-plus-sign"></i>
+	 *      <span class="hidden-xs hidden-sm ">Wello Word</span>
+     *   </a>
+	 * @param spanContainsText - Texto contido no span  
+	 * @throws InterruptedException 
+	 */
+	public void clickInXpathSpanContainsText(String spanContainsText) throws InterruptedException {
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'" + spanContainsText + "')]")));
+		 if(element.isDisplayed()){
+				//click
+				action.click(element).perform();
+		 }
+	
+	}
+	
+	public void clickInXpathSpanText(String spanText) throws InterruptedException {
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='"+ spanText +"']")));
+		 if(element.isDisplayed()){
+				//click
+				action.click(element).perform();
+		 }
+	
+	}
+	
+	/**
+	 * Esse metodo aguarda a visibilidade de um campo do tipo By.id, limpa e preenche
+	 * o mesmo com um conteudo passado
+	 * @throws InterruptedException 
+	 */
+	public void isVisibleTheanCleanAndFillField(String campo, String conteudo) throws InterruptedException{
+		WebElement element = wait
+				.until(ExpectedConditions.visibilityOfElementLocated(By.id(campo)));
+		
+		 if(element.isDisplayed()){
+				// na tela de pesquisa, limpa campo estilo
+				//driver.findElement(By.id(campo)).sendKeys("");
+			    element.clear();
+				//action.sendKeys("");
+				// entra com registro a ser pesquisado
+				driver.findElement(By.id(campo)).sendKeys(conteudo);
+		 }
+	}
+	
+	
+	
+	public void clickButtonSendToFormularioNovoCadastro(String titleButton) throws InterruptedException{
+		clickInXpathSpanContainsText(titleButton);
+	}
+	
+	public void clickButtonSendToFormularioNovoCadastroSpanText(String titleButton) throws InterruptedException{
+		clickInXpathSpanText(titleButton);
+	}
 	
 	/**
 	 * Esse metodo realiza o click no botaõ de acesso a tela de cadastros
 	 * @param btnContainsText - Nome contido no texto do botão a ser clicado  
+	 * @throws InterruptedException 
 	 */
-	public void clickButtonAcessaFormularioDeCadastro(String btnContainsText) {
+	public void clickButtonAcessaFormularioDeCadastro(String btnContainsText) throws InterruptedException {
+		//Thread.sleep(800);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("btnContainsText")));
+		// wait.until(ExpectedConditions.visibilityOf(btnContainsText));
 		// entra na tela de cadastro 
 		driver.findElement(By.xpath("//span[contains(text(),'" + btnContainsText + "')]")).click();
 	}
@@ -167,8 +231,10 @@ public class BaseTest  extends UsBaseApplicationTest{
 	/**
 	 * Esse metodo executo o click no botao da classe informada
 	 * @param classNameButton - nome da classe do botao 
+	 * @throws InterruptedException 
 	 */
-	public void clickButtonSalvarClassName(String classNameButton) {
+	public void clickButtonSalvarClassName(String classNameButton) throws InterruptedException {
+		Thread.sleep(200);
 		// click no botao salvar
 		driver.findElement(By.className(classNameButton)).click();
 	}
@@ -178,10 +244,56 @@ public class BaseTest  extends UsBaseApplicationTest{
 		driver.findElement(By.className(classNameButton)).click();
 	}
 	
-	public void clickButtonSalvarButton(String textButton){
-		driver.findElement(By.xpath("//button[text()='"+ textButton +"']")).click();
+	public WebElement xpathButtonTextIsVisible(String buttonText) throws InterruptedException {
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='"+ buttonText +"']")));
+		 Thread.sleep(5000);
+		 if(element.isDisplayed()){
+			 return element;
+		 }
+	 return null;
+	}
+	
+	public WebElement xpathClicavelIsVisible(String xpath) throws InterruptedException {
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+		
+		 if(element.isDisplayed()){
+			 return element;
+		 }
+	 return null;
+	}
+	
+	public void clickButtonLabelButton(String textButton) throws InterruptedException{
+		WebElement element = xpathButtonTextIsVisible(textButton);
+				
+		if(element.isDisplayed()){
+			assertEquals(textButton,element.getText());
+			action.click(element).perform();
+		}
 	}
 
+	public void clickButtonLabel(String textButton) throws InterruptedException{
+		WebElement element = xpathButtonTextIsVisible(textButton);
+		//wait.until(ExpectedConditions.alertIsPresent());			
+		if(element.isDisplayed()){
+			//wait.until(ExpectedConditions.textToBePresentInElement(element,textButton));
+			Thread.sleep(1000);
+			assertEquals(textButton,element.getText());
+			action.click(element).perform();
+		}
+	}
+	
+	
+	
+	public boolean ElementoEstaPresenteNaTela(String texto){
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@data-objeto='"+ texto +"']")));
+		
+		 if(element.isDisplayed()){
+			 return true;
+		 }
+		 return false;
+	   
+	}
+		
 	public void clickButtonSalvar(){
 		driver.findElement(By.xpath("//button[text()='Salvar']")).click();
 	}
@@ -190,6 +302,27 @@ public class BaseTest  extends UsBaseApplicationTest{
 		driver.findElement(By.xpath("//button[text()='Cancelar']")).click();
 	}
 	
+	public void clickButtonPesquisarFormularioPesquisa(){
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Pesquisar']")));
+		 if(element.isDisplayed()){
+				//click
+				action.click(element).perform();
+		 }
+		 
+		//driver.findElement(By.xpath("//button[text()='Pesquisar']")).click();
+	}
+
+	
+	
+	public void clickButtonSuperiorPesquisaFormularioNovoCadastro(){
+		 WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Pesquisa']")));
+		 if(element.isDisplayed()){
+				//click
+				action.click(element).perform();
+		 }
+	}
+	
+
 	/**
 	 * Esse metodo executa o click no botao da classe informada
 	 * @param classNameButton - nome da classe do botao 
@@ -237,10 +370,12 @@ public class BaseTest  extends UsBaseApplicationTest{
 	public void clickLink(String nomeText){
 		driver.findElement(By.xpath("//a[text()='"+ nomeText +"']")).click();
    }
-	
+
+
 	public void clickLinkButtonSetaCaret(String nomeText){
 		driver.findElement(By.cssSelector("span[class='caret']")).click();
 		driver.findElement(By.xpath("//a[text()='"+ nomeText +"']")).click();
+
    }
 	
 	
@@ -249,8 +384,10 @@ public class BaseTest  extends UsBaseApplicationTest{
 	 * @param messageKey - chave ndo arquivo properties da mensagem
 	 * @param entity - nome da entidade que esta sendo salva
 	 * @param msgText - mensagem de texto esperada pelo assertEquals do metodo 
+	 * @throws InterruptedException 
 	 */
-	public void validaMsgSucessWithKeyInSpanText(String messagesKey, String entity, String msgText) {
+	public void validaMsgSucessWithKeyInSpanText(String messagesKey, String entity, String msgText) throws InterruptedException {
+		Thread.sleep(5000);
 		validaMsgKeyInElementSpanText(messagesKey, entity, msgText);
 		
 	}
@@ -264,11 +401,12 @@ public class BaseTest  extends UsBaseApplicationTest{
 	 * @param msgText - mensagem de texto esperada pelo assertEquals do metodo 
 	 */
 	public void validaMsgErrorWithKeyInTextContains(String messagesKey, String atributo, String entity, String msgText) {
-		
-		// valida se msg de erro foi exibida		
-		assertEquals(messagesUtil.getMessage(messagesKey, atributo, entity), driver.findElement(By.xpath("//text()[contains(.,'" + msgText +"')]/ancestor::div[1]")).getText());
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//text()[contains(.,'" + msgText +"')]/ancestor::div[1]")));
 
-		
+		if(element.isDisplayed()){
+			// valida se msg de erro foi exibida		
+			assertEquals(messagesUtil.getMessage(messagesKey, atributo, entity), element.getText());
+		 }
 	}
 
 	/**
@@ -277,9 +415,11 @@ public class BaseTest  extends UsBaseApplicationTest{
 	 * @param atributo - chave ndo arquivo properties da mensagem
 	 * @param entity - nome da entidade que esta sendo salva
 	 * @param msgText - mensagem de texto esperada pelo assertEquals do metodo 
+	 * @throws InterruptedException 
 	 */
-	public void validaMsgErrorInTextContains(String msgText) {
+	public void validaMsgErrorInTextContains(String msgText) throws InterruptedException {
 		
+		Thread.sleep(500);
 		// valida se msg de erro foi exibida		
 		assertEquals(msgText, driver.findElement(By.xpath("//text()[contains(.,'" + msgText +"')]/ancestor::div[1]")).getText());
 
@@ -397,9 +537,16 @@ public class BaseTest  extends UsBaseApplicationTest{
 	/**
 	 * Esse metodo valida se a mensagem esperada foi exibida para o usuario
 	 * @param msgText - mensagem a ser exibida
+	 * @throws InterruptedException 
 	 */
-	public void validaSeExibidaEmTabelaFoiHaMensagem(String msgText) {
-		 assertTrue(isElementPresent(By.xpath("//td[text()='"+ msgText +"']")));
+	public void validaSeExibidaEmTabelaFoiHaMensagem(String msgText) throws InterruptedException {
+		Thread.sleep(5000);
+		boolean element = wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//td[text()='"+ msgText +"']"), msgText));
+		 
+		if(element){
+			assertTrue(true);
+		}
+		//assertTrue(isElementPresent(By.xpath("//td[text()='"+ msgText +"']")));
 				
 	}
 	
@@ -417,11 +564,23 @@ public class BaseTest  extends UsBaseApplicationTest{
 	
 	
 	/**
-	 * Esse metodo executa o click no botao excluir da lista de pesquisa de registros
+	 * Esse metodo executa o click no botao editar da lista de pesquisa de registros
+	 * @throws InterruptedException 
 	 */
-	public void clickButtonEditar() {
-		driver.findElement(By.xpath("//*[@class='glyphicon glyphicon-pencil']")).click();
+	public void clickButtonEditar() throws InterruptedException {
+		WebElement element = xpathClicavelIsVisible("//*[@class='glyphicon glyphicon-pencil']");
+		action.click(element).perform();
 	}
+	
+	/**
+	 * Esse metodo executa o click no botao "X"(Excluir) da tela de pesquisa de registros
+	 * @throws InterruptedException 
+	 */
+	public void clickButtonXTelaPesquisarParaExcluirRegistroPesquisado() throws InterruptedException {
+		WebElement element = xpathClicavelIsVisible("//*[@class='glyphicon glyphicon-remove']");
+		action.click(element).perform();
+	}
+	
 	
 	/**
 	 * Esse metodo verifica se o registro não foi excluido, verificando se ainda se encontra na listagem de pesquisa
@@ -456,29 +615,35 @@ public class BaseTest  extends UsBaseApplicationTest{
 	
 	/**
 	 * Esse metodo realiza o click no botao excluir do alert exibido ao usuario
+	 * @throws InterruptedException 
 	 */
-	public void clickButtonOkAlertExcluirRegistro() {
+	public void clickButtonOkAlertExcluirRegistro() throws InterruptedException {
 		// alert da msg de exclusao do registro foi exibida
-		//Thread.sleep(1000);
-		assertTrue(login.isElementPresent(By.xpath("//button[text()='Sim, exclua agora!']"))); 
+		//ep(1000);
+		//assertTrue(login.isElementPresent(By.xpath("//button[text()='Sim, exclua agora!']"))); 
 		// click no botao sim 
-		driver.findElement(By.xpath("//button[text()='Sim, exclua agora!']")).click(); 
+		//driver.findElement(By.xpath("//button[text()='Sim, exclua agora!']")).click(); 
 		// alert da msg de confirma a exclusao
-		assertTrue(login.isElementPresent(By.xpath("//button[text()='OK']")));
+		//assertTrue(login.isElementPresent(By.xpath("//button[text()='OK']")));
 		// alert de exclusao com sucesso e botao ok
-		//Thread.sleep(1000);
-		driver.findElement(By.xpath("//button[text()='OK']")).click();
+		//ep(1000);
+		//driver.findElement(By.xpath("//button[text()='OK']")).click();
+		// alert da msg de exclusao do registro foi exibida
+		 clickButtonLabelButton("Sim, exclua agora!");
+		 clickButtonLabelButton("OK");
 	}
 	
 
 	/**
 	 * Esse metodo faz upload de arquivos para o servidor
+	 * @throws InterruptedException 
 	 * @path idInput - id do link a ser clicado para abrir a caixa de dialogo do windows
 	 * @path path - caminho no disco onde esta o arquivo a ser carregado
 	 * 
 	*/
-    public void uploadFileDiskFromWebserve(String idInput, String path){	
+    public void uploadFileDiskFromWebserve(String idInput, String path) throws InterruptedException{	
 		WebElement upload =  driver.findElement(By.xpath("//input[@type='file'][@id='" + idInput + "']"));
+		//ep(5000);
 		upload.sendKeys(path);
 		
     }
@@ -498,7 +663,7 @@ public class BaseTest  extends UsBaseApplicationTest{
 			// obtem modal atual
 			driver.getWindowHandles();
 			
-			Thread.sleep(100);
+			//ep(100);
 			timeCount++;
 			   
 			if(timeCount > 50){
@@ -538,14 +703,15 @@ public class BaseTest  extends UsBaseApplicationTest{
 	 
 	}
 	
-	private void validaMsgKeyInElementSpanText(String messagesKey, String entity, String msgText) {
+	private void validaMsgKeyInElementSpanText(String messagesKey, String entity, String msgText) throws InterruptedException {
 		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='"+ msgText + "']")));
+		//boolean element = wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("//span[text()='"+ msgText + "']"), msgText));
 		
-		// valida se msg de sucesso foi exibida	
-		 if(element.getText().equals(msgText) && messagesUtil.getMessage(messagesKey, entity).equals(element.getText())){
-			 assertTrue(true);
-		 }
+		if(element.isDisplayed()){
+		     // valida se msg de sucesso foi exibida	
+			 if(element.getText().equals(msgText) && messagesUtil.getMessage(messagesKey, entity).equals(element.getText())){
+				 assertTrue(true);
+		      }
+		}
+      }
 	}
-
-
-}

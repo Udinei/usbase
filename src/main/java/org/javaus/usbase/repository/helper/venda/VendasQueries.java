@@ -3,15 +3,12 @@ package org.javaus.usbase.repository.helper.venda;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import com.google.common.base.Optional;
-
 import org.javaus.usbase.dto.VendaMes;
 import org.javaus.usbase.dto.VendaOrigem;
 import org.javaus.usbase.model.Venda;
 import org.javaus.usbase.repository.filter.VendaFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface VendasQueries {
 	

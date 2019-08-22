@@ -14,24 +14,24 @@ import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.hibernate.validator.group.GroupSequenceProvider;
-
 import org.javaus.usbase.model.validation.ClienteGroupSequenceProvider;
 import org.javaus.usbase.model.validation.CnpjGroup;
 import org.javaus.usbase.model.validation.group.CpfGroup;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="cliente")
 @DynamicUpdate
-@GroupSequenceProvider(ClienteGroupSequenceProvider.class)
+@GroupSequenceProvider(ClienteGroupSequenceProvider.class) // Trata a Validação das anotacao @CPF/@CNPJ
 public class Cliente implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -48,6 +48,7 @@ public class Cliente implements Serializable {
 	@Column(name="tipo_pessoa")
 	private TipoPessoa tipoPessoa;
 	
+	// Qual validacoes usar entre @CPF e @CNPJ sera tratada por @GroupSequenceProvider anotada na classe cliente
 	@NotBlank(message = "CPF/CNPJ é obrigatório")
 	@CPF(groups = CpfGroup.class)
 	@CNPJ(groups = CnpjGroup.class)
@@ -63,17 +64,24 @@ public class Cliente implements Serializable {
 	@Embedded
 	private Endereco endereco;
 
-	// Antes de persistir ou fazer update tira a mascara do cpfOuCnpj
+	// Metodos de callback do JPA - Antes de persistir ou fazer update tira a mascara do cpfOuCnpj
 	@PrePersist @PreUpdate
 	private void preInsertPreUpdate(){
 		this.cpfOuCnpj = TipoPessoa.removerFormatacao(this.cpfOuCnpj);
 	}
+
+	public String getCpfOuCnpjSemFormatacao(){
+		return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
+	}
+
 	
-	// Metodo jpa apos carregar o objeto cliente
+	// @PostLoad - apos carregar o objeto cliente, formata o CPF/CNPJ
 	@PostLoad 
 	private void postLoad(){
 		this.cpfOuCnpj = this.tipoPessoa.formatar(this.cpfOuCnpj);	
 	}
+	
+
 	
 	// novo objeto retorna true  
 	public boolean isNovo(){
@@ -143,9 +151,7 @@ public class Cliente implements Serializable {
 		this.endereco = endereco;
 	}
 
-	public String getCpfOuCnpjSemFormatacao(){
-		return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
-	}
+	
 	
 	@Override
 	public int hashCode() {

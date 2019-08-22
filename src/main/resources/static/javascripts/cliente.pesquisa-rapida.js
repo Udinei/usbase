@@ -29,7 +29,7 @@ UsBase.PesquisaRapidaCliente = (function () {
 			$.ajax({
 				url: this.pesquisaRapidaClientesModal.find('form').attr('action'), // pegando url do formulario de pesquisa rapida
 				method: 'GET',
-				contentType: 'application/json',
+				contentType: 'application/json',  // necessario para que ele não acesse o outro metodo GET do controller
 				data: {
 					nome: this.nomeInput.val() // "nome:" e o nome do parametro do metodo que recebera a informacao enviada  
 				},

@@ -7,7 +7,9 @@ import org.javaus.usbase.dto.FotoDTO;
 
 
 /**
-   Classe na Thread que encaminha o arquivo para ser renomeado e salvo, e necessario implementar Runnable */
+   FotoStorageRunnable -  Classe que sera executada pela Thread, encaminha o arquivo para
+   ser renomeado e salvo, e necessario implementar Runnable
+   */
 public class FotoStorageRunnable implements Runnable {
 	
 	private MultipartFile[] files;

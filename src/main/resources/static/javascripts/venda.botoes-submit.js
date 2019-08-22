@@ -20,7 +20,7 @@ UsBase.BotaoSubmit = (function(){
 			var acao = botaoClicado.data('acao'); // obtem o nome da acao contida no atributo data:acao do botao pode ser "emitir, salvar, enviarEmail"
 			var acaoInput = $('<input>'); //cria uma tag <input>
 			acaoInput.attr('name',acao); // insere na tag <input> criada acima, o atributo nome da acao no botao pode ser "emitir, salvar, enviarEmail"
-		
+		    console.log('acao enviada >>> ' + acaoInput.attr) 
 			this.formulario.append(acaoInput); // insere a tag no formulario, que sera enviada como parametro na url
 			this.formulario.submit(); // submet o formulario ao servidor
 		}

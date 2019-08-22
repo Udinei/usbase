@@ -83,7 +83,7 @@ public class UsuariosController {
 	
 	
 	@GetMapping
-	public ModelAndView pesquisar(UsuarioFilter usuarioFilter, @PageableDefault(size=3) Pageable pageable, HttpServletRequest httpServletRequest){
+	public ModelAndView pesquisar(UsuarioFilter usuarioFilter, @PageableDefault(size=2) Pageable pageable, HttpServletRequest httpServletRequest){
 		ModelAndView mv = new ModelAndView("usuario/PesquisaUsuarios");
 		mv.addObject("grupos", grupos.findAll());
 
@@ -95,11 +95,13 @@ public class UsuariosController {
 		return mv;
 	}
 	
-	/** @PutMapping - Atualização de objetos. Aguarda retorno de uma view. Como o metodo não retornara uma 
-	    view. Apos a execução @ResponseStatus(HttpStatus.OK) e utilizado para retornar codigo http para browser
-	    "codigo 200". A string status sera convertida automanticamento pelo spring para o Enum StatusUsuario */
+	/** @PutMapping - Por ser uma atualização de objetos. Aguarda retorno de uma view. Como o metodo não retornara uma 
+	  *  view.
+	  * @ResponseStatus(HttpStatus.OK) - Porque apos a execução do metodo nao sera retornado uma view
+	  * apenas codigo http para browser "codigo 200".
+	  * @RequestParam("status") StatusUsuario statusUsuario - A string status sera convertida automanticamento pelo spring para o Enum StatusUsuario */
 	@PutMapping("/status") 	
-	@ResponseStatus(HttpStatus.OK)  
+	@ResponseStatus(HttpStatus.OK) 
 	public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos, @RequestParam("status") StatusUsuario statusUsuario){
 		//Arrays.asList(codigos).forEach(System.out::println ); // print de array com java 8
 		
@@ -107,6 +109,9 @@ public class UsuariosController {
 		
 	}
 	
+	// Nao utilizar (@PathVariable("codigo") Usuario usuario), pois usuarios tem um relacionamento
+	// ManytoMany com grupos, que não é inicializado ao criar a entidade usuarios, lancando a exception lazily initialize a collection
+	// os grupos devem ser buscados em uma consulta separadamente usuarios.buscarComGrupos(codigo);  
 	@GetMapping("/{codigo}")
 	public ModelAndView editar(@PathVariable Long codigo){
 		Usuario usuario = usuarios.buscarComGrupos(codigo); // Busca usuarios no BD com grupos

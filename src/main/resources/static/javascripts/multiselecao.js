@@ -38,8 +38,8 @@ UsBase.MultiSelecao = (function() {
 							codigos: codigos,
 							status: status
 					    },
-			    success: function(){ // executa funcao apos execução do ajax com sucesso
-			    		  window.location.reload();  // recarrega a pagina e mantendo o filtro
+			    success: function(){ // success executa uma funcao apos execução do ajax com sucesso no servidor
+			    		  window.location.reload();  // recarrega a pagina com a atualizacao e mantem dados nos campos de filtro
 			            }
 					    
 			});

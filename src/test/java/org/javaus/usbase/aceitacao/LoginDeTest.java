@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class Login {
+public class LoginDeTest {
 	
 	public static WebDriver driver;
    
@@ -32,7 +32,7 @@ public class Login {
     	
     	
         driver = new ChromeDriver(options);
-        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        //driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         
         driver.get("http://localhost:8090");
 		
@@ -45,7 +45,7 @@ public class Login {
 
     	if(user.equals("") && password.equals("") ){
 			driver.findElement(By.name("username")).sendKeys("admin@usbase.com");
-		    driver.findElement(By.name("password")).sendKeys("admin");
+		    driver.findElement(By.name("password")).sendKeys("a13i2");
 		    
     	}else{
     		driver.findElement(By.name("username")).sendKeys(user);

@@ -77,8 +77,9 @@ public class CervejasController {
 	*/
 	@PostMapping(value = { "/nova", "{\\d+}" })
 	public ModelAndView salvar(@Valid Cerveja cerveja, BindingResult result, RedirectAttributes attributes){
-		if(result.hasErrors()){ // se tem erros na pagina 
-			return nova(cerveja); //coloca o objeto vindo da view na requisicao
+		
+		if(result.hasErrors()){ // caso tenha algum erro na pagina 
+			return nova(cerveja); //coloca o objeto vindo da view na requisicao de resposta exibindo as msg de erro
 		}
 		
 		try{	
@@ -90,14 +91,17 @@ public class CervejasController {
 			return nova(cerveja);  // retorna objeto na view e exibe mensagem de dados duplicados
 		}
 	
-		//attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso!"); // injeta msg pra view
+		//attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso!"); // injeta msg, que permanece na view mesmo apos o redirect
 		attributes.addFlashAttribute("mensagem", messagesUtil.getMessage("msg.salva.sucesso", "Cerveja"));
 	
 		return new ModelAndView("redirect:/cervejas/nova"); // carrega uma nova pagina com uma nova requisição
 	}
 	
 
-	// @PageableDefault(size=2) - utilizada para controlar a quantidade de registro a ser enviada em cada pagina
+	/** @PageableDefault(size=2) - Controla a quantidade de registro por pagina
+	/ BindingResult é necessario ao usar GetMapping. Os valores ficam salvos na url
+	  Pageable - Objeto que controla a paginação(numero da pagina) e ordenação da pesquisa 
+	  HttpServletRequest - usado montar e a manter a url com o filtro atual */
 	@GetMapping
 	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result,
 			@PageableDefault(size=2) Pageable pageable, HttpServletRequest httpServletRequest){

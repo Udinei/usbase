@@ -23,7 +23,8 @@ public class OrderElementTagProcessor extends AbstractElementTagProcessor{
 			IElementTagStructureHandler structureHandler) {
 		
 		IModelFactory modelFactory = context.getModelFactory();
-	
+	     
+		 // obtendo atributos da tela
 	     IAttribute page = tag.getAttribute("page");
 	     IAttribute field = tag.getAttribute("field");
 	     IAttribute text = tag.getAttribute("text");

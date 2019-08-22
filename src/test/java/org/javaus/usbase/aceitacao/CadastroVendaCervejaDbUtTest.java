@@ -33,8 +33,8 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	public static void initClass() {
 				
 		// Valido para todo o testes, aguarda até trinta segundos por um determinado
-		// elemento acessivel, legivel ou clicavel no DOM 
-		driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
+		// elemento acessivel, legivel ou clicavel na DOM 
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 				
 	}
 
@@ -72,24 +72,36 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		  // na venda
 		  deveExibirMsgDePrenchimentoCamposObrigatorio();
 		  deveCadastrarUmaNovaVenda();
-		  deveSalvarEmitirUmaVendaCadastrada();
-		  deveSalvarEnviarVendaPorEmail();
-			
 		  devePesquisarRegistroCadastrado();
-          deveEditarRegistroCadastradoPesquisado();
-          deveExcluirUmItemDaVenda();
-          deveExibirMsgNenhumaEntidadePesquisadaEncontrada();
-          naoDevePermitirVendedorCancelarVendaEmitida();
-          devePermitirVendedorAdminCancelarVendaEmitida();
+		  deveEditarRegistroCadastradoPesquisado();
+		  deveExcluirUmItemDaVenda();
+		 	  
+		  deveSalvarHeEnviarVendaCadastradaOrcamentoPorEmail();
+		  deveSalvarHeEmitirUmaVendaCadastradaOrcamento(); 
+          //deveExibirMsgNenhumaEntidadePesquisadaEncontrada();
+    	  //deveCancelarVendaEmitida();
+		  devePermitirVendedorEnviarEmailDeVendaEmitida();
+		  devePermitirVendedorAdminCancelarVendaEmitida();
+         
 	     
 	}
 	
-	
+	/*
+	private void deveCancelarVendaEmitida() throws InterruptedException {
+		clickButtonEditar();
+		//ep(1000);
+		clickButtonCancelar();
+		//ep(6000);
+		
+	}*/
+
+
+
 	public void deveExibirMsgDePrenchimentoCamposObrigatorio() throws InterruptedException{
 		clickLinkMenu("Vendas");
 		clickLinkItemMenuOrLinkAba("Cadastro de venda");
 		clickButtonSalvarClassName("btn-primary");
-		Thread.sleep(5000);
+		//ep(5000);
 		validaMsgErrorInTextContains("Adicione pelo menos uma cerveja na venda");
 		validaMsgErrorInTextContains("Selecione um cliente na pesquisa rápida");
 		 
@@ -109,7 +121,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 
 
-	private void deveSalvarEnviarVendaPorEmail() throws InterruptedException {
+	private void deveSalvarHeEnviarVendaCadastradaOrcamentoPorEmail() throws InterruptedException {
 		clickButtonEditar();
 		clickLinkButtonSetaCaret("Salvar e enviar por e-mail");
 		validaMsgSemChaveExibidaFoiHaMensagem("Venda nº 1 salva com sucesso e e-mail enviado");
@@ -118,9 +130,10 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 
 
-	private void deveSalvarEmitirUmaVendaCadastrada() throws InterruptedException {
+	private void deveSalvarHeEmitirUmaVendaCadastradaOrcamento() throws InterruptedException {
+		//ep(100);
 		clickButtonEditar();
-		Thread.sleep(500);
+		//ep(500);
 		clickLinkButtonSetaCaret("Salvar e emitir");
 		validaMsgSemChaveExibidaFoiHaMensagem("Venda salva e emitida com sucesso");
 		clickButtonPesquisa();
@@ -143,12 +156,12 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	
 	public void devePesquisarRegistroCadastrado() throws InterruptedException{
 	   // recebe como parametro campo e valor retornado na pesquisa
-		preencheCamposDePesquisa();
-		Thread.sleep(300);
+		preencheCamposDePesquisa("Orçamento");
+		//ep(300);
 		clickButtonSalvarClassName("btn-primary");
-		Thread.sleep(200);
+		//ep(500);
 		validaSeExibidaEmTabelaFoiHaMensagem("Juliana dos Santos");
-		Thread.sleep(5000);
+		//ep(5000);
 		
 	}
 	
@@ -170,7 +183,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	public void deveExcluirUmItemDaVenda() throws InterruptedException{
 		driver.get("http://localhost:8090");
 		clickLinkMenu("Vendas");
-		Thread.sleep(100);
+		//ep(100);
 		clickLinkItemMenuOrLinkAba("Pesquisa venda", wait, action);
 		clickButtonEditar();
 		
@@ -187,19 +200,44 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 				action.doubleClick(excluir).perform();
 		 }
 		 
-		Thread.sleep(5000);
+		//ep(5000);
     	clickButtonSalvarClassName("btn-primary");
 		validaMsgSucessWithKeyInSpanText("msg.salva.sucesso", "Venda", "Venda salva com sucesso!");
 		clickButtonSairFormularioCadastro("btn-default");
 	}
 	
 	
-	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada(){
+	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada() throws InterruptedException{
 		// recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisaNenhumaEntidadeEncontrada();
 		clickButtonSalvarClassName("btn-primary");
 		validaSeExibidaEmTabelaFoiHaMensagem("Nenhuma venda encontrada");
 		
+	}
+	
+	public void devePermitirVendedorEnviarEmailDeVendaEmitida() throws InterruptedException{
+		// desloga do sistema
+		clickLogOut(); 
+		// loga no sistema como usario vendedor
+		driver.get("http://localhost:8090");
+		login.loginFluxoPrincipal("usertest@usbase.com","u0e41e01");
+		
+		// Tenta cancelar venda feita pelo usuario admin
+		//ep(5000);
+		clickLinkMenu("Vendas");
+		clickLinkItemMenuOrLinkAba("Pesquisa venda");
+		//ep(1000);
+		preencheCamposDePesquisa("Emitida");
+		clickButtonPesquisar("btn-primary");
+		clickButtonEditar();
+		//ep(1000);
+		//clickButtonCancelar();
+     	clickButtonLabelButton("Enviar Email");
+		//ep(6000);
+		validaMsgSemChaveExibidaFoiHaMensagem("Venda nº 1 salva com sucesso e e-mail enviado");
+		//ep(3000);
+    	clickButtonSuperiorPesquisaFormularioNovoCadastro(); // volta para tela de pesquisa venda
+    	
 	}
 	
 	
@@ -211,18 +249,18 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		login.loginFluxoPrincipal("miguel@nn.com","miguel");
 		
 		// Tenta cancelar venda feita pelo usuario admin
-		Thread.sleep(5000);
+		//ep(5000);
 		clickLinkMenu("Vendas");
 		clickLinkItemMenuOrLinkAba("Pesquisa venda");
-		Thread.sleep(1000);
-		preencheCamposDePesquisa();
+		//ep(1000);
+		preencheCamposDePesquisa("Emitida");
 		clickButtonPesquisar("btn-primary");
 		clickButtonEditar();
-		Thread.sleep(1000);
+		//ep(1000);
 		clickButtonCancelar();
-		Thread.sleep(6000);
+		//ep(6000);
 		validaMsgSemChaveH2ExibidaFoiHaMensagem("Acesso negado"); // exibem mensagem 403 acesso negado
-		Thread.sleep(3000);
+		//ep(3000);
     	clickButtonClassName("btn-primary"); // volta para pagina de venda
     	
 	}
@@ -232,26 +270,28 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		clickLogOut(); 
 		// loga no sistema como usario vendedor
 		driver.get("http://localhost:8090");
-		login.loginFluxoPrincipal("admin@usbase.com","admin");
+		login.loginFluxoPrincipal("admin@usbase.com","a13i2");
 		
 		// Tenta cancelar venda feita pelo usuario admin
 		clickLinkMenu("Vendas");
 		clickLinkItemMenuOrLinkAba("Pesquisa venda");
-		Thread.sleep(1000);
-		preencheCamposDePesquisa();
+		//ep(1000);
+		preencheCamposDePesquisa("Emitida");
 		clickButtonPesquisar("btn-primary");
 		clickButtonEditar();
 
-		Thread.sleep(1000);
+		//ep(1000);
+		// o usuario admin deve ter a permissao ROLE_CANCELAR VENDA (colocar essa permissao no arquivo do flyway)
+		// e incluir no grupo a permissao
 		clickButtonCancelar();
-		Thread.sleep(2000);
+		//ep(2000);
 		validaMsgSemChaveExibidaFoiHaMensagem("Venda cancelada com sucesso!");
     	clickLogOut(); // sai do sistema
 	}
 
 	
 	public void deveExcluirRegistroPesquisadoEncontradoNaoUsadoEmOutroCadastro() throws InterruptedException{
- 			Thread.sleep(1000);
+ 			//ep(1000);
 			clickButtonExcluirRegistroPesquisadoComSubString("Cerveja");
 			clickButtonOkAlertExcluirRegistro();
 	}
@@ -267,24 +307,24 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		driver.findElement(By.id("nomeClienteModal")).sendKeys("Juliana");
 		clickButtonPesquisar("js-pesquisa-rapida-clientes-btn");
 		
-		Thread.sleep(100);
+		//ep(100);
 		driver.findElement(By.xpath("//td[text()='Juliana dos Santos']")).click();
 		
-		Thread.sleep(200);
+		//ep(200);
 		preencheCampoComMascaraSemClick("valorFrete", "200");
 		preencheCampoComMascaraSemClick("valorDesconto", "100");
 		clickLinkItemMenuOrLinkAba("Entrega");
 		
-		Thread.sleep(100);
+		//ep(100);
 		driver.findElement(By.xpath("//input[@type='text'][@name='dataEntrega']")).sendKeys("25/10/2020");
 		preencheCampoComMascara("horarioEntrega", "1945");
 		driver.findElement(By.xpath("//textarea[@name='observacao']")).sendKeys("Entregar somente após as 09:00");
 		driver.findElement(By.cssSelector("a[href='#cervejas']")).click();
 		driver.findElement(By.id("cerveja")).sendKeys("AA1234");
-		Thread.sleep(100);
+		//ep(100);
 		driver.findElement(By.xpath("//text()[contains(.,'Becks Long Neck')]/ancestor::div[1]")).click();
 		
-		Thread.sleep(100);
+		//ep(100);
 		driver.findElement(By.name("valorUnitario")).clear();
 		driver.findElement(By.name("valorUnitario")).sendKeys("2");
 	
@@ -295,12 +335,12 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 	}
 	
 	
-	public void preencheCamposDePesquisa(){
+	public void preencheCamposDePesquisa(String status){
 		String[] dataCriacao = retornaDataHojeHeAmanha();
 			
 		// na tela de cadastro informa registro de pesquisa 
 		driver.findElement(By.name("codigo")).sendKeys("1");
-		selectComboxVisibleValue("status","Orçamento");
+		selectComboxVisibleValue("status", status);
 		preencheCampoComMascara("desde", dataCriacao[0]);
 		preencheCampoComMascara("ate", dataCriacao[1]);
 		driver.findElement(By.name("valorMinimo")).sendKeys("1");
@@ -320,7 +360,7 @@ public class CadastroVendaCervejaDbUtTest extends BaseTest {
 		driver.findElement(By.id("cerveja")).sendKeys("BB1234");
 		driver.findElement(By.xpath("//text()[contains(.,'Cerva Negra')]/ancestor::div[1]")).click();
 		
-		Thread.sleep(100);
+		//ep(100);
 		driver.findElement(By.name("valorUnitario")).clear();
 		driver.findElement(By.name("valorUnitario")).sendKeys("3");
 	

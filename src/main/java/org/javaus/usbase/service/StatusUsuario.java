@@ -13,6 +13,7 @@ public enum StatusUsuario {
 	DESATIVAR {
 		@Override
 		public void executar(Long[] codigos, Usuarios usuarios) {
+			// executa um update no status do usuario, cujo codigos sao fornecidos no array codigos  
 			usuarios.findByCodigoIn(codigos).forEach(u -> u.setAtivo(false));
 		}
 	};

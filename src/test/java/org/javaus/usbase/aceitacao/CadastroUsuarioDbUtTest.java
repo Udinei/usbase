@@ -68,7 +68,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	
 	
 	public void deveExibirMsgDePrenchimentoCamposObrigatorio() throws InterruptedException{
-		clickButtonAcessaFormularioDeCadastro("Novo Usuário");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo Usuário");
 		clickButtonSalvarClassName("btn-primary");
 		List<String> validCampos = Arrays.asList("Nome", "E-mail");
 		validaCamposObrigatorios(validCampos);
@@ -78,17 +78,18 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	}
 
 	public void deveCadastrarUmNovoRegistro() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Novo Usuário");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo Usuário");
 		preencheFormularioDeDados();
 		clickButtonSalvarClassName("btn-primary");
 
         // valida msg exibida usuario, apos salvar formulario de cadastro   
+		//validaMsgSucessWithKeyInSpanText("msg.salvo.sucesso", "Usuário", "Usuário salvo com sucesso!");
 		validaMsgSucessWithKeyInSpanText("msg.salvo.sucesso", "Usuário", "Usuário salvo com sucesso!");
 		clickButtonSairFormularioCadastro("btn-default");   
 	}
 	
 	public void deveValidarExecaoRegistroJaCadastrado() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Novo Usuário");
+		clickButtonSendToFormularioNovoCadastroSpanText("Novo Usuário");
 		preencheFormularioDeDados();
 		clickButtonSalvarClassName("btn-primary");
 		validaMsgErrorInTextContains("E-mail já cadastrado");
@@ -96,7 +97,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 		clickButtonSairFormularioCadastro("btn-default");  
 	}
 	
-	public void devePesquisarRegistroCadastrado(){
+	public void devePesquisarRegistroCadastrado() throws InterruptedException{
 	   // recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa();
 		clickButtonSalvarClassName("btn-primary");
@@ -119,7 +120,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	}
 	
 	
-	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada(){
+	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada() throws InterruptedException{
 		// recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa();
 		clickButtonSalvarClassName("btn-primary");
@@ -130,7 +131,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 	
 	public void deveCancelarExclusaoRegistroPesquisadoEncontrado() throws InterruptedException{
 		driver.get("http://localhost:8090/usuarios");
-		Thread.sleep(1000);
+		//ep(1000);
 		preencheCamposDePesquisaParaExclusao();
 		clickButtonPesquisar("btn-primary");
 		clickButtonExcluirRegistroPesquisadoComSubString("Maria das dores");
@@ -140,7 +141,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 
 	
 	public void deveExcluirRegistroPesquisadoEncontradoNaoUsadoEmOutroCadastro() throws InterruptedException{
- 			Thread.sleep(1000);
+ 			//ep(1000);
 			clickButtonExcluirRegistroPesquisadoComSubString("Maria das dores");
 			clickButtonOkAlertExcluirRegistro();
 	}
@@ -169,7 +170,7 @@ public class CadastroUsuarioDbUtTest extends BaseTest {
 		driver.findElement(By.name("nome")).sendKeys("Maria das dores");
 		driver.findElement(By.name("email")).clear();
 		driver.findElement(By.name("email")).sendKeys("maria@gmail.com");
-		Thread.sleep(1000);
+		//ep(1000);
 		selectCheckBoxItemValue("Administrador"); 
 	}
 

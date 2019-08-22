@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 import org.javaus.usbase.validation.validator.AtributoConfirmacaoValidator;
 
+// Essa anotação (ElementType.TYPE) Somente pode ser usado em cima de uma classe
 @Target({ ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = { AtributoConfirmacaoValidator.class })

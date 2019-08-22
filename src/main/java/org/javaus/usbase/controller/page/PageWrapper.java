@@ -10,6 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * 
+ * @author Udinei
+ *
+ * @param <T>
+ * Essa classe auxilia na paginação e ordenação de campos das telas de pesquisa
+ */
 public class PageWrapper<T> {
 	
 	
@@ -48,12 +55,14 @@ public class PageWrapper<T> {
 		
         /** resolvendo bug de espaços enviado na url, o spring não processa "+" 
          * (que siguinifica espaco, enviado  na url) então faca replace de "\\+" por "%20" 
-         * que e o codigo UTF-8 para espaco. o ReplaceAll remove da url o parametro "excluido", 
-         * evitando exibir novamente a mensagem de exclusão com sucesso, ao tentar submeter a ordenação
-         * de campos da pagina apos uma exclusao */
+         * que e o codigo UTF-8 para espaco. E remove espaço no inicio da string "=%20" deixando
+         * somente o sinal de "="
+         * ReplaceAll remove da url o parametro "excluido", evitando exibir novamente a mensagem 
+         * de exclusão com sucesso, ao tentar submeter a ordenação de campos da pagina apos uma
+         *  exclusao */
 		String httpUrl = httpServletRequest.getRequestURL().append(
 				httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "")
-				.toString().replaceAll("\\+", "%20").replaceAll("excluido", "");
+				.toString().replaceAll("\\+", "%20").replaceAll("excluido", "").replaceAll("=%20", "=");
 		
 		this.uriBuilder = UriComponentsBuilder.fromHttpUrl(httpUrl);
 	}
@@ -84,11 +93,12 @@ public class PageWrapper<T> {
 	
 	/** gera a url, para manter os filtros na paginacao */
 	public String urlParaPagina(int pagina) {
-		// .build(true).encode() evita a codificação erradao de valores ao enviar para o servidor
+		// .build(true).encode() evita a codificação errada de valores ao enviar para o servidor
 		return uriBuilder.replaceQueryParam("page", pagina).build(true).encode().toUriString();
 	}
 	
 	public String urlOrdenada(String propriedade) {
+		// criando um novo uriBuilder para usar na ordenacao
 		UriComponentsBuilder uriBuilderOrder = UriComponentsBuilder
 				.fromUriString(uriBuilder.build(true).encode().toUriString());
 		
@@ -97,6 +107,7 @@ public class PageWrapper<T> {
 		return uriBuilderOrder.replaceQueryParam("sort", valorSort).build(true).encode().toUriString();
 	}
 	
+	// Inverte a ordem da listagem, default (ascendente),  descente
 	public String inverterDirecao(String propriedade) {
 		String direcao = "asc";
 		
@@ -113,6 +124,7 @@ public class PageWrapper<T> {
 	}
 	
 	public boolean ordenada(String propriedade) {
+		// order e o paramentro de ordenacao passados na url 
 		Order order = page.getSort() != null ? page.getSort().getOrderFor(propriedade) : null; 
 		
 		if (order == null) {

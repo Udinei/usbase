@@ -49,6 +49,7 @@
 				</div>
 	
 				<div class="row">
+				        <!-- javascript de tratamento do tipoPessoa cliente.mascara-cpf-cnpj.js -->
 	    				<div class="form-group  col-sm-4  bw-required" usbase:classforerror="tipoPessoa">
 								<label class="control-label">Tipo pessoa</label>
 								<div>
@@ -99,11 +100,13 @@
 	    	   </div>
 				
 				<div class="row">
+				    <!--  usbase.js tratamento da mascara -->
 					<div class="form-group col-sm-4">
 						<label for="cep">CEP</label>
 						<input id="cep" type="text" class="form-control  js-cep" th:field="*{endereco.cep}"/>
 					</div>
 					
+					<!-- javascript de tratamento implementado em cliente.comobo-estado-cidade.js -->
 					<div class="form-group col-sm-4">
 						<label for="estado">Estado</label>
 						<select id="estado" class="form-control" th:field=*{endereco.cidade.estado}>

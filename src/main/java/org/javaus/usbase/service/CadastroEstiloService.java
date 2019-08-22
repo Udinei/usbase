@@ -31,12 +31,14 @@ public class CadastroEstiloService {
 	public Estilo salvar(Estilo estilo){
 		Optional<Estilo> estiloExistente = estilos.findByNomeIgnoreCase(estilo.getNome());
 		
-		// objeto com o atributo pesquisado existe, e seu identificador é igual ao do objeto a salvar   
+		// objeto com o atributo nome pesquisado existe, e seu identificador é diferente do objeto a salvar.
+		// então entra no if.  Caso contrario nao entraria no if, pois seria uma edição do objeto existente recuperado 
 		if(estiloExistente.isPresent() && !estiloExistente.get().equals(estilo)){
+			// então lança a execessao, pois ja existe um objeto com esse nome cadastrado
 			throw new NomeEstiloJaCadastradoException(messagesUtil.getMessage("msg.error.atrib.ent.ja.cadastrado", "Nome", "estilo")); // entao lanca exceptiono
 		}
 		
-		// salva um novo objeto, ou altera caso identificador do objeto ja existir 
+		// salva um novo objeto (saveAndFlush - salva e já retorna o codigo do objeto salvo), ou altera caso identificador do objeto ja existir 
 		return estilos.saveAndFlush(estilo);
 	}
 

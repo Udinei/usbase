@@ -34,6 +34,7 @@ public class ItemVenda   {
 	@JoinColumn(name = "codigo_venda")
 	private Venda venda; 
 	
+	
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -67,13 +68,15 @@ public class ItemVenda   {
 	}
 	
 	
-	/** calcula o valor total do item - valorUnitario * quantidade */
+	/** calcula o valor total do item - valorUnitario * quantidade 
+	 * deve ser feito um new BigDecimal para quantidade, pois o mesmo é integer */
 	public BigDecimal getValorTotal(){
 		return valorUnitario.multiply(new BigDecimal(quantidade));
 	}
 	
 	public Boolean getQtdEstoqueAbaixoDaVenda(){
-		 if((cerveja.getQuantidadeEstoque() - quantidade) < 0){
+		 if((cerveja.getQuantidadeEstoque() - quantidade) < 0) {
+			 System.out.println(">>>>  estoque abaixo da venda");
             return true;
 		 }
 		 return false;

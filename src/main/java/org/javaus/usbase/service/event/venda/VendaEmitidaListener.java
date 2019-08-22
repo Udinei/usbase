@@ -32,9 +32,9 @@ public class VendaEmitidaListener extends VendaEvent{
 		
 		// para cada item da venda atualiza o estoque
 		for(ItemVenda item : vendaEvent.getVenda().getItens()){
-				Cerveja cerveja = cervejas.findOne(item.getCerveja().getCodigo());
+				Cerveja cerveja = cervejas.getOne(item.getCerveja().getCodigo());
 				
-				// subtrai do estoque a quantidade vendida do item
+				// subtrai do total do estoque a quantidade vendida do item
 				cerveja.setQuantidadeEstoque(cerveja.getQuantidadeEstoque() - item.getQuantidade());
 				cervejas.save(cerveja);
 		}

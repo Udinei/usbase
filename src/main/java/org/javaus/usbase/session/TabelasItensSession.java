@@ -16,6 +16,7 @@ import org.springframework.web.context.annotation.SessionScope;
 @Component
 public class TabelasItensSession {
 	
+	// A estrutura Set nao permite itens repetidos
 	private Set<TabelaItensVenda> tabelas = new HashSet<>();
 
 	

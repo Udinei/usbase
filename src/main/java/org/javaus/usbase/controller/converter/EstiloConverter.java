@@ -1,10 +1,11 @@
 package org.javaus.usbase.controller.converter;
 
+import org.javaus.usbase.model.Estilo;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import org.javaus.usbase.model.Estilo;
-
+@Component
 public class EstiloConverter implements Converter<String, Estilo> {
 
 	@Override

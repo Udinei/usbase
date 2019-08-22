@@ -29,17 +29,20 @@ public class MenuAttributeTagProcessor extends AbstractAttributeTagProcessor {
 			String attributeValue , IElementTagStructureHandler structureHandler) {
 		     
 			
-		    // retorna o codigo do hymeleaf ja interpretado (tags) 
+		    // Obtendo configuração do contexto,  atributos e tags do Thymeleaf  
 			IEngineConfiguration configuration = context.getConfiguration();
 			IStandardExpressionParser parser = StandardExpressions.getExpressionParser(configuration);
 			IStandardExpression expression = parser.parseExpression(context, attributeValue);
 			
+			//Obtem do contexto atual (usbase) a tag menu que usa @Urlexpression do Thymeleaf, na pagina
 			String menu = (String) expression.execute(context);
-							
+				
+			    // obtendo o endereco url digitado no browser
 				HttpServletRequest request = ((IWebContext) context).getRequest();
+				// obtendo o endereco uri dos menu na tela
 				String uri = request.getRequestURI();
 				
-				//  o menu esta na uri 
+				//  se o menu esta na uri 
 				if(uri.matches(menu)){
 					String classesExistentes = tag.getAttributeValue("class");
 					
