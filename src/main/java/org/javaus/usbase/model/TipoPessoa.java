@@ -31,6 +31,7 @@ public enum TipoPessoa {
 		 this.grupo = grupo;
 	}
 	
+	// A criaçao desse metodo abstrato obriga a ser implementado em cada elemento do ENUM o metodo
 	public abstract String formatar(String cpfOuCnpj);
 
 	public String getDescricao() {

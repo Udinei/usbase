@@ -41,6 +41,8 @@
 			<input type="hidden" id="uuid" th:field="*{uuid}" />
 			<input type="hidden" th:field="*{codigo}"/>			
 			<input type="hidden" th:field="*{usuario}"/>
+			<input type="hidden" th:field="*{status}"/>
+			
 
 			<div class="row">
 				<div class="col-sm-4">
@@ -142,7 +144,7 @@
 						</div>
 					</div>
 					
-					<!--  div em que sera apresentada o html do carrinho de compras das cervejas a iniciar e na edicao -->
+					<!--  div em que sera inserido o html do carrinho de compras das cervejas, quando iniciar e na edicao -->
 					<div class="bw-tabela-cervejas  js-tabela-cervejas-container" data:valor="${valorTotalItens}">
 						<th:block th:replace="venda/TabelaItensVenda"></th:block>
 					</div>
@@ -190,11 +192,19 @@
 					</div>
 
 					<button class="btn  btn-danger  js-submit-btn" data:acao="cancelar" th:unless="${venda.nova}">Cancelar</button>
+					
 				</div>
+
 			</div>
-		</form>
+		
+			<button class="btn  btn-danger  js-submit-btn" data:acao="cancelar" th:if="${venda.status.descricao == 'Emitida' && #authentication.principal.usuario.nome == 'admin'}">Cancelar</button>
+			<button class="btn  btn-primary js-submit-btn" th:if="${venda.status.descricao == 'Emitida'}" data:acao="enviarEmailVendaEmitida">Enviar Email</button>
+		
+						
+		</form>                                                       
 	</div>
 	
+	<!-- inserção do fragment "pesquisaRapidaClientes"  cliente/PesquisaRapidaClientes (local do arquivo)-->
 	<th:block th:replace="cliente/PesquisaRapidaClientes :: pesquisaRapidaClientes"></th:block>
 	<th:block th:replace="hbs/TemplateAutocompleteCerveja"></th:block>
 	

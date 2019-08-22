@@ -37,6 +37,7 @@ public class ClientesImpl implements ClientesQueries {
 		
 		paginacaoUtil.preparar(criteria, pageable);
 		adicionarFiltro(filtro, criteria);
+		// .LEFT_OUTER_JOIN traz o retorno mesmo que codigo da cidade esteja null  
 		criteria.createAlias("endereco.cidade","c", org.hibernate.sql.JoinType.LEFT_OUTER_JOIN);
 		criteria.createAlias("c.estado","e", org.hibernate.sql.JoinType.LEFT_OUTER_JOIN);
 		
@@ -66,7 +67,7 @@ public class ClientesImpl implements ClientesQueries {
 	private void adicionarFiltro(ClienteFilter filtro, Criteria criteria) {
 		if(filtro != null){
 			if (!StringUtils.isEmpty(filtro.getNome())) {
-				criteria.add(Restrictions.ilike("nome", filtro.getNome(), MatchMode.ANYWHERE));
+				criteria.add(Restrictions.ilike("nome", filtro.getNome().trim(), MatchMode.ANYWHERE));
 			}
 			
 			if (!StringUtils.isEmpty(filtro.getCpfOuCnpj())) {

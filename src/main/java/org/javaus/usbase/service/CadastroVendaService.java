@@ -24,12 +24,12 @@ public class CadastroVendaService {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
-	
+	// A ausencia da anotação abaixo provoca o erro: No transactional Entitmanager available
 	@Transactional
 	public Venda salvar(Venda venda){
+		
 		if(venda.isSalvarProibido()){
-			throw new RuntimeException("Usuário tentando salvar uma venda proibida");
-			
+			//throw new RuntimeException("Usuário tentando salvar uma venda proibida");
 		}
 		
 		// se for uma nova venda
@@ -39,7 +39,7 @@ public class CadastroVendaService {
 		
 		// se estiver editanto usa a data de criacao da venda recuperada do banco
 		}else{
-			Venda vendaExistente = vendas.findOne(venda.getCodigo());
+			Venda vendaExistente = vendas.getOne(venda.getCodigo());
 			venda.setDataCriacao(vendaExistente.getDataCriacao());
 		}
 				
@@ -61,21 +61,23 @@ public class CadastroVendaService {
 		venda.setStatus(StatusVenda.EMITIDA);
 		salvar(venda);
 		
+		
+		
 		// Dispara o evento para as classes listener que escutam esse evento, 
-		// atualizar o estoque apos emitir uma venda
+		// atualiza estoque apos uma venda uma venda emitida
 		publisher.publishEvent(new VendaEmitidaListener(venda)); 
 				
 	}
 	
-	/** A anotacao "@PreAuthorize" permite fazer referencia ao objeto venda sendo passado no metodo.
-	    "#venda.usuario == principal.usuario" - somente o usuario que criou a venda pode cancelar ou 
-	    ou quem tem o papel - "or hasRole('CANCELAR_VENDA')". Esse controle faz parte do spring security 
-	    e e necessario ter anotation @EnableGlobalMethodSecurity(prePostEnabled = true)
-	    no arquivo SecurityConfig do spring, somente usuario com a role CANCELAR_VENDA pode cancelar uma venda */
+	/** "@PreAuthorize" - define quem pode chamar esse metodo  
+	 *   "#venda.usuario == principal.usuario" - somente o usuario adminstrador, quem criou a venda 
+	    ou quem tem o papel - "or hasRole('CANCELAR_VENDA')" 
+	    Para tanto a anottation @EnableGlobalMethodSecurity(prePostEnabled = true), que faz parte 
+	    do controle de acesso do spring security, deve ter sido declara no arquivo SecurityConfig do spring,  */
 	@PreAuthorize("#venda.usuario == principal.usuario or hasRole('CANCELAR_VENDA')") 
 	@Transactional
 	public void cancelar(Venda venda) {
-		Venda vendaExistente = vendas.findOne(venda.getCodigo());
+		Venda vendaExistente = vendas.getOne(venda.getCodigo());
 				
 		// retorna produto para estoque, essa tecnica permite o desacomplemento do software 
 		publisher.publishEvent(new VendaCanceladaListener(vendaExistente));
@@ -83,6 +85,8 @@ public class CadastroVendaService {
 		vendaExistente.setStatus(StatusVenda.CANCELADA);
 		vendas.save(vendaExistente);
 	}
+
+
 
 	
 }

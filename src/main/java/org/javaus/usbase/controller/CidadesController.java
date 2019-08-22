@@ -5,6 +5,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.javaus.usbase.controller.page.PageWrapper;
+import org.javaus.usbase.model.Cidade;
+import org.javaus.usbase.repository.Cidades;
+import org.javaus.usbase.repository.Estados;
+import org.javaus.usbase.repository.filter.CidadeFilter;
+import org.javaus.usbase.service.CadastroCidadeService;
+import org.javaus.usbase.service.exception.ImpossivelExcluirEntidadeException;
+import org.javaus.usbase.service.exception.NomeCidadeJaCadastradoException;
+import org.javaus.usbase.util.MessagesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,16 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import org.javaus.usbase.controller.page.PageWrapper;
-import org.javaus.usbase.model.Cidade;
-import org.javaus.usbase.repository.Cidades;
-import org.javaus.usbase.repository.Estados;
-import org.javaus.usbase.repository.filter.CidadeFilter;
-import org.javaus.usbase.service.CadastroCidadeService;
-import org.javaus.usbase.service.exception.ImpossivelExcluirEntidadeException;
-import org.javaus.usbase.service.exception.NomeCidadeJaCadastradoException;
-import org.javaus.usbase.util.MessagesUtil;
 
 @Controller
 @RequestMapping("/cidades")
@@ -60,14 +59,16 @@ public class CidadesController {
 		return mv;
 	}
 
-	// metodo executado pelo ajax chamado via javascript - vira a url /usbase/cidades?estado=2
+	// Metodo executado pelo ajax chamado via javascript - vira a url /usbase/cidades?estado=2
+	// defaultValue = "-1" - se nao for enviado nenhum estado retorna uma lista vazia 
+	// Cache implementado passos em: WebConfig (@EnableCaching) e no metodo do controler (@Cacheable) como no metodo abaixo
 	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	@Cacheable(value = "cidades", key="#codigoEstado") // fazendo cache de cidades, tendo como chave codigo do estado
 	public @ResponseBody List<Cidade> pesquisarPorCodigoEstado(
 			@RequestParam(name = "estado", defaultValue = "-1") Long codigoEstado){
 		
 		try {
-			Thread.sleep(1000); // teste - aguarda 1 segundo antes de pesquisar
+			Thread.sleep(1000); // teste - aguarda 1 segundo antes de iniciar a pesquisar
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -75,8 +76,12 @@ public class CidadesController {
 		
 	}
 	
+	
+	// @CacheEvict - sempre que for salvo um novo registro de cidades, limpara o cache "cidades".
+	// como opção pode ser usado allEntries=true para limpar todo o cache geral
+    // "#cidade.temEstado()") - evita erros ao salvar, caso nao tenha um estado selecionado na tela
 	@PostMapping({ "/novo", "{\\+d}" }) 
-	@CacheEvict(value="cidades", key = "#cidade.estado.codigo", condition = "#cidade.temEstado()") // limpando de cache
+	@CacheEvict(value="cidades", key = "#cidade.estado.codigo", condition = "#cidade.temEstado()") 
 	public ModelAndView salvar(@Valid Cidade cidade, BindingResult result, RedirectAttributes attributes){
 		if(result.hasErrors()){
 			return nova(cidade);

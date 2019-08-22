@@ -8,7 +8,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 
-
+/**
+ * Essa classe pode ser injetada em qualquer outra classe model, pois esta anotada com @Embeddable
+ * nao é necessario implementar hashCode(), equals(), e nem id 
+ * */
 @Embeddable
 public class Endereco implements Serializable{
 	

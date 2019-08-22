@@ -7,17 +7,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+import javax.annotation.PostConstruct;
 
 import org.javaus.usbase.storage.FotoStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
 
+// Ao subir a aplicação essa classe cria o diretorio padrao de gravacao das foto, no sistema de
+// arquivos local na home do usuario dentro da subpasta .usbasefotos
 
 //@Profile("local")
 @Component
@@ -25,33 +28,25 @@ public class FotoStorageLocal implements FotoStorage {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FotoStorageLocal.class);
 	private static final String THUMBNAIL_PREFIX = "thumbnail.";
-
 	
+	@Value("${usbase.foto-storage-local.local}")
 	private Path local; // armazena endereco de gravacao da foto
-	
-	// Diretorio local de gravacao da foto no sistema de arquivos na home do usuario na subpasta .usbasefotos
-	public FotoStorageLocal() {
-		this(getDefault().getPath(System.getProperty("user.home"),".usbasefotos"));
-		
-	}
 
+	@Value("${usbase.foto-storage-local.url-base}")
+	private String urlBase;
 	
-	public FotoStorageLocal(Path path) {
-		this.local = path;
-		criarPastas();
-	}
-	
-
 	@Override
 	public String salvar(MultipartFile[] files) {
 		String novoNome = null;
 		
 		if(files != null && files.length > 0){
 			MultipartFile arquivo = files[0];
+			
+			// aplicando um prefixo no nome do arquivo e retornando o novo nome
 			novoNome =  renomearArquivo(arquivo.getOriginalFilename());
 			
 			try {
-				// salva o arquivo com novo nome
+				// salva o arquivo com um novo nome, usando um prefixo gerado pelo UUID da google
 				arquivo.transferTo(new File(this.local.toAbsolutePath().toString() + getDefault().getSeparator() + novoNome));
 			
 			} catch (IOException e) {
@@ -101,10 +96,11 @@ public class FotoStorageLocal implements FotoStorage {
 	
 	@Override
 	public String getUrl(String foto) {
-		return "http://localhost:8080/fotos/" + foto;
+		System.out.println(">>>>  esta passando aqui");
+		return urlBase + foto;
 	}
 	
-	
+	@PostConstruct
 	private void criarPastas() {
 		try {
 			Files.createDirectories(this.local);

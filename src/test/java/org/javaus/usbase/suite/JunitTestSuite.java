@@ -1,20 +1,19 @@
 package org.javaus.usbase.suite;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
 import org.javaus.usbase.aceitacao.CadastroCervejaDbUtTest;
 import org.javaus.usbase.aceitacao.CadastroClienteDbUtTest;
-import org.javaus.usbase.aceitacao.CadastroEstadoDbUtTest;
-import org.javaus.usbase.aceitacao.CadastroEstiloItTest;
+import org.javaus.usbase.aceitacao.CadastroCidadeDbUtTest;
+import org.javaus.usbase.aceitacao.CadastroEstiloDbutTest;
 import org.javaus.usbase.aceitacao.CadastroUsuarioDbUtTest;
 import org.javaus.usbase.aceitacao.CadastroVendaCervejaDbUtTest;
 import org.javaus.usbase.aceitacao.LoginItTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-   CadastroEstadoDbUtTest.class,
-   CadastroEstiloItTest.class,
+   CadastroCidadeDbUtTest.class,
+   CadastroEstiloDbutTest.class,
    CadastroClienteDbUtTest.class,
    CadastroUsuarioDbUtTest.class,
    CadastroCervejaDbUtTest.class,

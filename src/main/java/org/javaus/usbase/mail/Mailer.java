@@ -44,6 +44,7 @@ public class Mailer {
 	@Async
 	public void enviar(Venda venda){
 		
+		// context do thumyleaf
 		Context context = new Context(new Locale("pt","BR"));
 		
 		// insere no context as variaveis com os dados que serão, recuperadas no email pelo thymeleaf
@@ -75,16 +76,17 @@ public class Mailer {
 			}
 			
 			
-			try {
+			try {       // retorna na string o corpo do email
 						String email = thymeleaf.process("mail/ResumoVenda", context);
 						
 						// criando objeto para enviar mensagem com html no email
 						MimeMessage mimeMessage = mailSender.createMimeMessage();
 						
-						// true porque sera adicionado imagem no email, e enconding UTF-8
+						// true - porque sera adicionado imagem no email, e enconding UTF-8
 						MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 						
-						helper.setFrom("udineisilva@gmail.com");      // quem esta enviando o email
+						// TODO:deve ser configurado ao instalar a aplicação em produção
+						helper.setFrom("udineisilva@gmail.com"); // quem esta enviando o email      
 						helper.setTo(venda.getCliente().getEmail());  // para que sera enviado o email
 						helper.setSubject(String.format("UsBase - Venda nº %d", venda.getCodigo()));  // assunto
 						helper.setText(email, true); // TRUE - para email que contem html
@@ -97,7 +99,7 @@ public class Mailer {
 							helper.addInline("mockCerveja", new ClassPathResource("static/images/cerveja-mock.png"));
 						}
 						
-						// recuperando o thumbnail da fogo 
+						// recuperando o thumbnail da foto 
 						for (String cid: fotos.keySet()){             // percorre todos os itens do Map
 							String[] fotoContentType = fotos.get(cid).split("\\|"); // retorna  para dentro do array a foto e o contentType
 							String foto = fotoContentType[0];                       // obtem a foto 

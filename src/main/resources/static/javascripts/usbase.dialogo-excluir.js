@@ -5,9 +5,11 @@ UsBase.DialogoExcluir = (function(){
 	function DialogoExcluir(){
 		this.exclusaoBtn = $('.js-exclusao-btn');
 		
-		// ao iniciar, se na url atual tiver o parametro excluido, exibe msg com de sucesso em um alert swal 
+		// search - perquisa dados na url
+		// ao iniciar, se na url atual tiver o parametro "excluido" na querystring,
+		// exibe msg de sucesso em um alert swal (sweetalert plugin JS de alertas)
 		if(window.location.search.indexOf('excluido') > -1){ 
-			swal('Pronto', 'Excluído com sucesso!', 'success') // swall - plugin de mensagem js
+			swal('Pronto', 'Excluído com sucesso!', 'success') 
 		}
 	}
 	
@@ -21,14 +23,14 @@ UsBase.DialogoExcluir = (function(){
 		var url = botaoClicado.data('url');  // obtem url data:url="@{/cervejas/{codigo}(codigo=${cerveja.codigo})}"
 		var objeto = botaoClicado.data('objeto');
 		
-		// swall - plugin de mensagem js
+		// swall (sweetalert)- plugin de mensagem para java script
 		swal({                              
 			title: 'Tem certeza?',
 			 text: 'Excluir "' + objeto + '"? Você não poderá recuperar depois.',
 			showCancelButton: true,
 			confirmButtonColor: '#DD6B55',
 			confirmButtonText: 'Sim, exclua agora!',
-			closeOnConfirm: false	// aguarda o usuario confirmar antes de fechar
+			closeOnConfirm: false	// aguarda o usuario confirmar antes de fechar o alert
 			}, onExcluirConfirmado.bind(this, url)); // confirmou a exclusao   
 		}
 	
@@ -54,6 +56,7 @@ UsBase.DialogoExcluir = (function(){
 			window.location = novaUrl;  // direciona o browser para a nova url
 		}
 		
+		// a msg de erro capturada aqui, vira do metodo excluir do controller
 		function onErrorExcluir (e){
 			swal('Oops', e.responseText, 'error');
 		}

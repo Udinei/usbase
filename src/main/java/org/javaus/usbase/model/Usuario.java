@@ -15,14 +15,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-
 import org.javaus.usbase.validation.AtributoConfirmacao;
 
+// Uma anotação(@interface) criada para validar senha e confirmação
 @AtributoConfirmacao(atributo="senha", atributoConfirmacao="confirmacaoSenha", message = "Confirmação da senha não confere")
 @Entity
 @Table(name = "usuario")
@@ -49,8 +49,11 @@ public class Usuario implements Serializable {
 	
 	private Boolean ativo;
 	
-	@Size(min=1, message = "Selecione pelo menos um grupo")
-	@ManyToMany // para este tipo de relacionamento, a melhor pratica é cria um metodo no UsuarioQueries e inicializar quando precisar  
+	// @ManyToMany - para este tipo de relacionamento, o padrão é nao trazer a lista de entidades
+	// relacionadas com @ManyToMany(fetch = FetchType.EAGER). a melhor pratica é criar um metodo no
+	// UsuarioQueries e inicializar por lá, quando precisar dos grupos
+	@Size(min=1, message = "Selecione pelo menos um grupo") // @NotNull nao pode ser usado para lista. Usar @Size(min= ...)
+	@ManyToMany   
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "codigo_usuario")
 	                                 , inverseJoinColumns = @JoinColumn(name = "codigo_grupo"))
 	private List<Grupo> grupos;

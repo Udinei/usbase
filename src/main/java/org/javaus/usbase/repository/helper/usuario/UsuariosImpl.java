@@ -60,9 +60,9 @@ public class UsuariosImpl implements UsuariosQueries {
 	@Override
 	public Usuario buscarComGrupos(Long codigo) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Usuario.class);
-		criteria.createAlias("grupos", "g", JoinType.LEFT_OUTER_JOIN); // Fazendo relacionamento com a tabela e trazendo os grupos
+		criteria.createAlias("grupos", "g", JoinType.LEFT_OUTER_JOIN); // Fazendo relacionamento(Eager) com a tabela usuario e trazendo os grupos
 		criteria.add(Restrictions.eq("codigo", codigo));
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // Agrupa por Usuario.class (ROOT_ENTITY) e removendo os repetidos
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // Agrupa por Usuario.class (DISTINCT_ROOT_ENTITY) e removendo os repetidos
 		return (Usuario) criteria.uniqueResult();
 	}
 	
@@ -84,8 +84,7 @@ public class UsuariosImpl implements UsuariosQueries {
 			if (!StringUtils.isEmpty(filtro.getEmail())) {
 				criteria.add(Restrictions.ilike("email", filtro.getEmail(), MatchMode.START));
 			}
-			
-			//criteria.createAlias("grupos", "g", JoinType.LEFT_OUTER_JOIN);
+						
 			if (filtro.getGrupos() != null && !filtro.getGrupos().isEmpty()) {
 				
 				// lista que funcionara como a clasula and na consulta sql
@@ -104,11 +103,13 @@ public class UsuariosImpl implements UsuariosQueries {
 						                                                          // u.codigo in (codigo) e adiciona na lista de subqueries      
 				}
 				
-				// cria um array de criterios, do tamanho da lista de subqueries
+				// cria um array Criterion, do tamanho da lista de subqueries
 				Criterion[] criterions = new Criterion[subqueries.size()];
 
-				// passando o resultado das subqueries para a queries principal - ex
-				criteria.add(Restrictions.and(subqueries.toArray(criterions))); // transforma subqueries em array, e aplica and nos resultados da subqueries
+				// Transforma subqueries em arrays de Criterions. 
+				// aplica and nos resultados da subqueries
+				// passando o resultado das subqueries para a queries principal
+				criteria.add(Restrictions.and(subqueries.toArray(criterions))); 
 				
 			}
 		}
@@ -116,9 +117,10 @@ public class UsuariosImpl implements UsuariosQueries {
 
 	
 	
-	// carrega usuario do bd para autenticacao
+	// carrega usuario do BD para autenticacao
 	@Override
 	public Optional<Usuario> porEmailEAtivo(String email) {
+		// consulta usando JPQL
 		return manager
 				.createQuery("from Usuario where lower(email) = lower(:email) and ativo = true", Usuario.class)
 				.setParameter("email", email).getResultList().stream().findFirst(); // .stream().findFirst() 

@@ -7,6 +7,7 @@
 	  
 <head>
 	<title>Cadastro de usuário</title>
+	<!-- carrega o switch do bootstrap para tratar o botao ativo/inativo   -->
 	<link rel="stylesheet" type="text/css" th:href="@{/stylesheets/vendors/bootstrap-switch.min.css}">
 
 </head>
@@ -116,10 +117,14 @@
 		</div>
 	</section>
 	
+	<!--  adicionando um javascritp extra no final dessa pagina, o que permite a inserção desse 
+	block esta configurado no LayoutPadrao.html -->
 	<th:block layout:fragment="javascript-extra">
+	    <!-- esse javascript sera usado somente nessa pagina -->
 		<script th:src="@{/javascripts/vendors/bootstrap-switch.min.js}"></script>
 		
 		<script>
+		  // exibe no input checkbox (status - ativo/inativo) o switch do bootstrap on/off 
 		  $('.js-status').bootstrapSwitch();
 		</script>
 		

@@ -27,6 +27,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+// TODO: Remover as mensagens de validação para o arquivo de intercionalizacao messages.properties, afim de despoluir o codigo
 @Entity
 @Table(name ="venda")
 @DynamicUpdate //altera somente os atributos que foram modificados durante uma edição
@@ -70,10 +71,11 @@ public class Venda implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private StatusVenda status = StatusVenda.ORCAMENTO; 
 	
-	/** orphanRemoval = true, para quando da edição ou exclusao de registros, 
-	 O hibernate remover os itens orfão da lista e também do banco. caso contrario sera
-	 duplicado e inserido uma nova lista com os mesmos registros no banco
-	  CascadeType.ALL para que o JPA ao salvar uma venda salve tambem os itens da venda*/
+	/** orphanRemoval = true, para quando da edição ou exclusao de registros de itens da venda, 
+	 O hibernate remover os itensVenda orfão da lista na tela e também do BD,
+	 caso contrario sera duplicado no BD os registros de itemVenda, como sendo uma nova
+	 lista de itens da venda
+	  CascadeType.ALL - para que o JPA ao salvar uma venda salve tambem os itens da venda*/
 	@OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemVenda> itens = new ArrayList<>();
 	
@@ -97,7 +99,7 @@ public class Venda implements Serializable {
 	/** seta a venda no itemVenda */
 	public void adicionarItens(List<ItemVenda> itens) {
 		this.itens = itens;
-		// para cada itemVenda seta o atributo codigo_venda - this é a venda que esta sendo criada
+		// para cada itemVenda seta o codigo_venda - this é a venda que esta sendo criada
 		this.itens.forEach(i -> i.setVenda(this));
 		
 	}
@@ -121,7 +123,15 @@ public class Venda implements Serializable {
 	}
 	
 	public boolean isSalvarPermitido(){
-		return !status.equals(StatusVenda.CANCELADA);
+		boolean tmp = true;		
+		
+		if(status.equals(StatusVenda.CANCELADA) || status.equals(StatusVenda.EMITIDA)){
+		    tmp = false;
+		}else if(status.equals(StatusVenda.ORCAMENTO)){
+			tmp = true;
+		}
+
+		return tmp; 
 	}
 	
 	public boolean isSalvarProibido(){

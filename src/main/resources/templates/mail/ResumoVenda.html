@@ -5,7 +5,7 @@
 <body style="font-family: Arial; font-size: 14px;">
 	
 	<p style="text-align: right">
-	    <!-- cid: espaco de conteudo disponivel no email, tipo anexo -->
+	    <!-- cid: espaco de conteudo disponivel no email, tipo anexo.  th:src=".." sobreescreve <img src=".." -->
 		<img src="../../static/images/logo-gray-usbase.png" th:src="|cid:${logo}|">
 	</p>
 
@@ -33,6 +33,7 @@
 				</td>
 			</tr>
 			
+			<!-- trecho de codigo usado apenas em tempo de desenvolvimento pra visualizar o template com mais de um item  -->
 			<th:block th:if="${false}">
 				<tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc">
 					<td style="width: 50px; padding-bottom: 10px; padding-top: 10px">

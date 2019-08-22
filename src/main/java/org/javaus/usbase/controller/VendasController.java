@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+
 @Controller
 @RequestMapping("/vendas")
 public class VendasController {
@@ -80,10 +82,10 @@ public class VendasController {
 	 *  Ao encontrar um @Valid em qualquer metodo dessa classe, usa esse validador para validar os atributos
 	 *  o parametro passado ao @InitBinder "venda" informa que esse validador é somente para classe Venda, caso
 	 *  esse parametro nao seja passado o Spring tentara Validar a classe VendaFilter também provocando um erro */
-	@InitBinder("venda")
-	public void inicializarValidador(WebDataBinder binder){
-	   binder.setValidator(vendaValidator);	
-	}
+//	@InitBinder("venda")
+//	public void inicializarValidador(WebDataBinder binder){
+//	   binder.setValidator(vendaValidator);	
+//	}
 	
 		
 	
@@ -150,7 +152,7 @@ public class VendasController {
 	public ModelAndView enviarEmail(Venda venda, BindingResult result, RedirectAttributes attributes
 			, @AuthenticationPrincipal UsuarioSistema usuarioSistema){
 		validarVenda(venda);
-        
+        		
 		// aplicando o validador "@Valid" apos inserir os itens 
 		vendaValidator.validate(venda, result);
 		if(result.hasErrors()){
@@ -158,7 +160,28 @@ public class VendasController {
 		}
 		
 		venda.setUsuario(usuarioSistema.getUsuario());
+		venda = cadastroVendaService.salvar(venda);
+			
+		mailer.enviar(venda); // envia email de forma assincrona
+				
+		attributes.addFlashAttribute("mensagem", String.format("Venda nº %d salva com sucesso e e-mail enviado", venda.getCodigo()));
+		return new ModelAndView("redirect:/vendas/nova");
+	}
+	
+	
+	// envio de email da venda emitida
+	@PostMapping(value="/nova", params="enviarEmailVendaEmitida")
+	public ModelAndView enviarEmailVendaEmitida(Venda venda, BindingResult result, RedirectAttributes attributes
+			, @AuthenticationPrincipal UsuarioSistema usuarioSistema){
+		validarVenda(venda);
+        		
+		// aplicando o validador "@Valid" apos inserir os itens 
+		vendaValidator.validate(venda, result);
+		if(result.hasErrors()){
+			return nova(venda);
+		}
 		
+		venda.setUsuario(usuarioSistema.getUsuario());
 		venda = cadastroVendaService.salvar(venda);
 		mailer.enviar(venda); // envia email de forma assincrona
 				
@@ -166,12 +189,13 @@ public class VendasController {
 		return new ModelAndView("redirect:/vendas/nova");
 	}
 	
+	
 	/**
 	 * Esse metodo faz a busca do item selecionado no autocomplete
 	 * */
 	@PostMapping("/item")
 	public ModelAndView adicionarItem(Long codigoCerveja, String uuid){
-		Cerveja cerveja = cervejas.findOne(codigoCerveja);
+		Cerveja cerveja = cervejas.getOne(codigoCerveja);
 		
 		// monta url final da foto da tabela de intens
 		urlFinalFoto = url.urlBrowser() + "/fotos/" + cerveja.getUrlThumbnailFoto();
@@ -184,20 +208,29 @@ public class VendasController {
 
 	@PutMapping("/item/{codigoCerveja}")
 	public ModelAndView alterarQuantidadeItem(@PathVariable("codigoCerveja") Cerveja cerveja, @RequestParam Venda codigoVenda, @RequestParam Integer quantidade, @RequestParam String uuid){
-	    
+		Venda venda = null;
+		
 		// recupera a venda da lista de itens, a venda sera usada para controle da exibição do bloco de exclusao de itens
-		Venda venda = vendas.findOne(codigoVenda.getCodigo());
-		//cerveja.getQuantidadeEstoque();
+		if(codigoVenda != null){	
+			venda = vendas.getOne(codigoVenda.getCodigo());
+		}
+		
+		if((cerveja.getQuantidadeEstoque() - quantidade) < 0){
+			System.out.println("ops quantidade acima do estoque");
+		};
+		
 		tabelaItens.alterarQuantidadeItens(uuid, cerveja, quantidade);
 		
 		return mvTabelaItensVenda(uuid, venda);
 	}
 
 	
-	/**  Esse metodo demonstra a forma de integração do sprig-data com o spring-jpa no acesso a dados
-	  *  fazendo uma pesquisa findOne direta, isso é possivel porque esta sendo usado na interface da classe "Cerveja" 
-	  *  o jpaRepository que converte a string "codigoCerveja" passada como parametro junto com @PathVariable para o
-	  *  objeto Cerveja. Nota: Primeiro deve ser configurado "criar" no Webconfig o Bean DomainClassConverter */
+	/**  Esse metodo demonstra uma das formas de integração do sprig-data com o spring-jpa no acesso a dados
+	  *  @PathVariable("codigoCerveja") Cerveja cerveja - faz uma pesquisa findOne direta, isso é possivel porque esta 
+	  *  sendo usado na interface da classe "Cerveja" o jpaRepository, usa a string "codigoCerveja"
+	  *  passada como parametro para pesquisar e retornar objeto Cerveja.
+	  *  Nota: Para tanto deve-se primeiro configurar "criar" no Webconfig o Bean DomainClassConverter
+	  */
 	@DeleteMapping("/item/{uuid}/{codigoCerveja}")
 	public ModelAndView excluirItem(@PathVariable("codigoCerveja") Cerveja cerveja, @PathVariable String uuid){
 		tabelaItens.excluirItem(uuid, cerveja);
@@ -252,7 +285,7 @@ public class VendasController {
 	public ModelAndView editar(@PathVariable Long codigo){
 		// recupera a venda com os itens
 		Venda venda = vendas.buscarComItens(codigo);
-		System.out.println(">>>>>> a editar venda " + codigo);
+
 		// gera um uuid de sessao do usuario, para a venda recuperada caso nao exista
 		setUuid(venda);
 		
@@ -281,13 +314,17 @@ public class VendasController {
 		try {
 			cadastroVendaService.cancelar(venda);
 			
+		// acesso negado ao tentar cancelar uma venda	
 		} catch (AccessDeniedException e) {
-			return new ModelAndView("/403"); //poderia enviar para outra pagina 
+			ModelAndView mv = new ModelAndView("error");
+			mv.addObject("status", 403);
+			return mv;
 		}
 		
 		//cadastroVendaService.cancelar(venda);
 		attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso!");
 		
+		// apos cancelar retorna para a pagina de vendas com os campos desabilitados
 		return new ModelAndView("redirect:/vendas/" + venda.getCodigo());
 				
 	}

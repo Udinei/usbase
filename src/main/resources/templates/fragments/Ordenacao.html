@@ -2,7 +2,8 @@
 <html lang="pt"
       xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org">
-
+	  
+<!--Nota: (pagina, propriedade, texto) sao parametros que o fragmento vai receber da pagina onde sera inserido  -->
 <th:block th:fragment="order (pagina, propriedade, texto)">
 	 <a th:href="${pagina.urlOrdenada(propriedade)}" th:remove="${pagina.vazia} ? tag">
 	    <span th:text="${texto}"></span>

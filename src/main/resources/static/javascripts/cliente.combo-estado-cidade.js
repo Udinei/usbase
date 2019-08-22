@@ -5,7 +5,7 @@ UsBase.ComboEstado = (function() {
 	function ComboEstado(){
 		this.combo = $('#estado');
 		this.emitter = $({}); // cria um objeto jquery
-		this.on = this.emitter.on.bind(this.emitter);  // abilita no objeto emitter o evento "on" do javascritp
+		this.on = this.emitter.on.bind(this.emitter);  // habilita no objeto emitter o evento "on" do javascritp
 		
 	}
 	
@@ -30,7 +30,7 @@ UsBase.ComboCidade = (function(){
 		this.comboEstado = comboEstado;
 		this.combo = $('#cidade');
 		this.imgLoading = $('.js-img-loading')
-		this.inputHiddenCidadeSelecionada = $('#inputHiddenCidadeSelecionada');		
+		this.inputHiddenCidadeSelecionada = $('#inputHiddenCidadeSelecionada'); 		
 			
 		
 	}
@@ -58,9 +58,9 @@ UsBase.ComboCidade = (function(){
 			  	method: 'GET',
 			  	contentType: 'application/json',
 			  	data: { 'estado': codigoEstado},    // valor que sera passado na url codigoEstado na variavel estado ex: estado=2
-				beforeSend: iniciarRequisicao.bind(this), // executa funcao a iniciarRequisicao, antes de enviar requisição 
-				complete: finalizarRequisicao.bind(this)  // apos finalizar requisição retorna para complete o resultado
-			});
+				beforeSend: iniciarRequisicao.bind(this), // antes executa funcao que exibe icone de carregando..., ate a funcao ajax terminar 
+				complete: finalizarRequisicao.bind(this)  // apos terminar esconde o icone de carregando... 
+				});
 			
 			resposta.done(onBuscarCidadesFinalizado.bind(this)); // pega resposta do ajax e executa a funcao onBuscarCidadesFinalizado
 			
@@ -70,7 +70,7 @@ UsBase.ComboCidade = (function(){
 	}
 	
 	// retorna dentro do parametro cidades a resposta do ajax
-	// para gerar uma nova combo
+	// para gerar uma nova combo com os nomes das cidades retornadas
 	function onBuscarCidadesFinalizado(cidades){
 		
 		var options = [];
@@ -81,32 +81,32 @@ UsBase.ComboCidade = (function(){
 		});
 		
 
-		this.combo.html(options.join()); 	// junta todos option da combo sem virgula
-		this.combo.removeAttr('disabled');  // remove o atributo que desabilita a combo para seleçao
+		this.combo.html(options.join()); 	// junta todos option da combo 
+		this.combo.removeAttr('disabled');  // habilita a combo cidade para seleçao
 		
-		var codigoCidadeSelecionada = this.inputHiddenCidadeSelecionada.val(); 
+		var codigoCidadeSelecionada = this.inputHiddenCidadeSelecionada.val();  
 		
 		if(codigoCidadeSelecionada){
 			this.combo.val(codigoCidadeSelecionada);
 		}
 	}
 	
-    // reinicia a combo cidades
+    // reinicia a combo cidades desabilitada
 	function reset(){
 		this.combo.html('<option value="">Selecione a cidade</option>'); // adiciona a combo um item, msg "Selecione a etc.." 
 		this.combo.val(''); // coloca " " como primeiro item de seleção da combo
 		this.combo.attr('disabled', 'disabled'); // desabilita a combo
 	}
 	
-	// exibe icone de animação de carregamento da combo
+
 	function iniciarRequisicao(){
-		reset.call(this);
-		this.imgLoading.show();
+		reset.call(this);     
+		this.imgLoading.show(); // exibe icone de animação de carregamento da combo
 	}
 	
-	// esconde icone de animação do carregamento
+
 	function finalizarRequisicao(){
-		this.imgLoading.hide();
+		this.imgLoading.hide(); // esconde icone de animação do carregamento
 	}
 	
 	return ComboCidade;

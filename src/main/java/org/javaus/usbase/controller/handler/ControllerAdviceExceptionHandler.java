@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import org.javaus.usbase.service.exception.NomeEstiloJaCadastradoException;
 
-/** Classe observer para tratamento de Exception da aplicacao */
+/** Classe generica padrao Observer para tratamento de Exception da aplicacao,
+ *  fica observando os controllers */
 @ControllerAdvice  
 public class ControllerAdviceExceptionHandler {
 	

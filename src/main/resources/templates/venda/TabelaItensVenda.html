@@ -23,10 +23,18 @@
 					<span>x R$[[${{item.valorUnitario}}]]</span>
 				</div>
 				<div class="bw-tabela-cerveja-valor-grande">R$[[${{item.valorTotal}}]]</div>
-				<div class="bw-tabela-cerveja-msg-erro-quantidade" th:if="${item.qtdEstoqueAbaixoDaVenda}">[[${{item.qtdEstoqueAbaixoDaVendaMsg}}]]</div>
+				<div class="bw-tabela-cerveja-msg-erro-quantidade" th:if="${item.qtdEstoqueAbaixoDaVenda && (itens != null) && (venda != null ) && (venda.status.descricao != 'Emitida') && (venda.status.descricao != 'Cancelada')}">[[${{item.qtdEstoqueAbaixoDaVendaMsg}}]]</div>
+				<div class="bw-tabela-cerveja-msg-erro-quantidade" th:if="${item.qtdEstoqueAbaixoDaVenda && (itens != null) && (venda == null )}">[[${{item.qtdEstoqueAbaixoDaVendaMsg}}]]</div>
 			</div>
 			
-			<div class="bw-tabela-item__painel-exclusao" th:if="${venda != null ? venda.salvarPermitido : false}">
+			
+			<div class="bw-tabela-item__painel-exclusao"  th:if="${venda != null ? venda.salvarPermitido : false}">
+				<span class="bw-tabela-item__titulo-exclusao">Excluir este item da venda?</span>
+				<button type="button" class="btn btn-danger  js-exclusao-item-btn" 
+				 data:codigo-cerveja="${item.cerveja.codigo}">Sim, excluir!</button>
+			</div>
+			
+			<div class="bw-tabela-item__painel-exclusao"  th:if="${venda == null}">
 				<span class="bw-tabela-item__titulo-exclusao">Excluir este item da venda?</span>
 				<button type="button" class="btn btn-danger  js-exclusao-item-btn" 
 				 data:codigo-cerveja="${item.cerveja.codigo}">Sim, excluir!</button>

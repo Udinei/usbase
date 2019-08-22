@@ -2,7 +2,6 @@ package org.javaus.usbase.base;
 
 import java.sql.SQLException;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.dbunit.DBTestCase;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.IDatabaseConnection;
@@ -12,28 +11,21 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 
-@EnableTransactionManagement
+/*@EnableTransactionManagement
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
     TransactionalTestExecutionListener.class,
-    DbUnitTestExecutionListener.class})
+    DbUnitTestExecutionListener.class}) 
 @RunWith(SpringRunner.class)
 @TestPropertySource(locations="classpath:application.properties")
 @DatabaseSetup("/META-INF/sampleData.xml")
-@SpringBootTest
+@SpringBootTest*/
 public class UsBaseApplicationDBunitTest extends DBTestCase {
     
 
@@ -50,16 +42,16 @@ public class UsBaseApplicationDBunitTest extends DBTestCase {
 	 * BasicDataSource that is used by Spring.
 	 */
 	//@Autowired
-	private BasicDataSource dataSource;
-	
-		
-	public void setDatasource(){
-	    dataSource = new BasicDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost/usbase?useSSL=false");
-		dataSource.setUsername("root");
-		dataSource.setPassword("root");	
-	}
+//	private BasicDataSource dataSource;
+//	
+//		
+//	public void setDatasource(){
+//	    dataSource = new BasicDataSource();
+//		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//		dataSource.setUrl("jdbc:mysql://localhost/usbase?useSSL=false");
+//		dataSource.setUsername("root");
+//		dataSource.setPassword("root");	
+//	}
 	
 	/**
 	 * DBUnit specific object to provide configuration to to properly state the

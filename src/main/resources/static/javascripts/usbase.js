@@ -1,13 +1,19 @@
-var UsBase = UsBase || {}; // use o namespace UsBase ou  caso não exista crie (objeto global)
+// Usando Patterns - Namespace UsBase
+// Todas as funções javascript serão inseridos no objeto UsBase (classe)  
+var UsBase = UsBase || {}; //caso objeto UsBase não exista crie (objeto de uso global)
 
-
-UsBase.MaskMoney = (function(){ // model patterns 
+         
+UsBase.MaskMoney = (function(){ // Uma mistura de model patterns e funcao contrutora (classe)   
 	
-	function MaskMoney(){    // criando uma função construtora, colocar as  inicializacoes
-		this.decimal =$('.js-decimal');
+	// MaskMoney funcao contrutora em letra maiuscula (classe)
+	// declarar e inicializar atributos
+	function MaskMoney(){    // criando função construtora, colocar as  inicializacoes
+		this.decimal =$('.js-decimal');  // em função contrutora deve ser trocado var por this, pois o mesmo sera acesso no contexto da aplicacao
 		this.plain =$('.js-plain');
 	}
 	
+	
+	// declarar metodos/comportamentos sempre em prototype
 	MaskMoney.prototype.enable = function(){ // comportamento da funcao
 		//this.decimal.maskMoney({ decimal: ',' , thousands: '.' });
     	//this.plain.maskMoney({ precision:0, thousands: '.' });
@@ -152,8 +158,9 @@ UsBase.formataInteiroComPonto = function(valor){
 
 
 $(function(){
+	// inicializando a classe MaskMoney a partir no namespace UsBase na variavel maskMoney
 	var maskMoney = new UsBase.MaskMoney();
-	maskMoney.enable();
+	maskMoney.enable(); // executando o metodo enabled
 	
 	var maskPhoneNumber = new UsBase.MaskPhoneNumber();
 	maskPhoneNumber.enable();

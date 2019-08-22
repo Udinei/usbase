@@ -28,7 +28,7 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 
 	@BeforeClass
 	public static void initClass() {
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
 		//  entra na tela de pesquisa
 		driver.get("http://localhost:8090/cervejas");
 	}
@@ -46,6 +46,8 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 		dbUnitHelper.execute(DatabaseOperation.CLEAN_INSERT, "UsBaseXmlDBData.xml");
 		
 	}	
+	
+	
 	@Test
 	public void fluxoPrincipal() throws Exception {
 		
@@ -66,7 +68,7 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 	
 	
 	public void deveExibirMsgDePrenchimentoCamposObrigatorio() throws InterruptedException{
-		clickButtonAcessaFormularioDeCadastro("Nova Cerveja");
+		clickButtonSendToFormularioNovoCadastroSpanText("Nova Cerveja");
 		clickButtonSalvarClassName("btn-primary");
 		List<String> validCampos = Arrays.asList("origem, F",
 												 "quantidade, M",
@@ -85,37 +87,39 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 	}
 
 	public void deveCadastrarUmNovoRegistro() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Nova Cerveja");
+		clickButtonSendToFormularioNovoCadastroSpanText("Nova Cerveja");
 		preencheFormularioDeDados();
 		clickButtonSalvarClassName("btn-primary");
-
-        // valida msg exibida usuario, apos salvar formulario de cadastro   
+		//p(5000);
+		// valida msg exibida usuario, apos salvar formulario de cadastro   
 		validaMsgSucessWithKeyInSpanText("msg.salva.sucesso", "Cerveja", "Cerveja salva com sucesso!");
+		clickButtonSuperiorPesquisaFormularioNovoCadastro();
 		clickButtonSairFormularioCadastro("btn-default");   
 	}
 	
 	public void deveCadastrarUmNovoRegistroNovaCerveja() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Nova Cerveja");
+		clickButtonSendToFormularioNovoCadastroSpanText("Nova Cerveja");
 		preencheFormularioDeDadosNovaCerveja();
+		//p(5000);
 		clickButtonSalvarClassName("btn-primary");
-
+            
         // valida msg exibida usuario, apos salvar formulario de cadastro   
 		validaMsgSucessWithKeyInSpanText("msg.salva.sucesso", "Cerveja", "Cerveja salva com sucesso!");
 		clickButtonSairFormularioCadastro("btn-default");   
 	}
 	
 	public void deveValidarExecaoRegistroJaCadastrado() throws InterruptedException {
-		clickButtonAcessaFormularioDeCadastro("Nova Cerveja");
+		//clickButtonSendToFormularioNovoCadastroSpanText("Nova Cerveja");
 		preencheFormularioDeDados();
 		clickButtonSalvarClassName("btn-primary");
-		Thread.sleep(5000);
+		//p(5000);
 		//validaMsgSemChaveExibidaFoiHaMensagem("SKU da cerveja já cadastrado!");
 		validaMsgErrorInTextContains("SKU da cerveja já cadastrado!");
                                        
 		clickButtonSairFormularioCadastro("btn-default");  
 	}
 	
-	public void devePesquisarRegistroCadastrado(){
+	public void devePesquisarRegistroCadastrado() throws InterruptedException{
 	   // recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa();
 		clickButtonSalvarClassName("btn-primary");
@@ -138,7 +142,7 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 	}
 	
 	
-	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada(){
+	public void deveExibirMsgNenhumaEntidadePesquisadaEncontrada() throws InterruptedException{
 		// recebe como parametro campo e valor retornado na pesquisa
 		preencheCamposDePesquisa();
 		clickButtonSalvarClassName("btn-primary");
@@ -149,7 +153,7 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 	
 	public void deveCancelarExclusaoRegistroPesquisadoEncontrado() throws InterruptedException{
 		driver.get("http://localhost:8090/cervejas");
-		Thread.sleep(1000);
+		//p(1000);
 		preencheCamposDePesquisaParaExclusao();
 		clickButtonPesquisar("btn-primary");
 		clickButtonExcluirRegistroPesquisadoComSubString("Cerveja");
@@ -159,8 +163,9 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 
 	
 	public void deveExcluirRegistroPesquisadoEncontradoNaoUsadoEmOutroCadastro() throws InterruptedException{
- 			Thread.sleep(1000);
-			clickButtonExcluirRegistroPesquisadoComSubString("Cerveja");
+ 			//p(1000);
+		    clickButtonXTelaPesquisarParaExcluirRegistroPesquisado();
+			//clickButtonExcluirRegistroPesquisadoComSubString("Cerveja");
 			clickButtonOkAlertExcluirRegistro();
 	}
 
@@ -177,8 +182,9 @@ public class CadastroCervejaDbUtTest extends BaseTest {
 		selectRadioButtonValue("origem", "Internacional");
 		driver.findElement(By.name("quantidadeEstoque")).sendKeys("12");
 		driver.findElement(By.name("comissao")).sendKeys("5");
-		Thread.sleep(100);
-		uploadFileDiskFromWebserve("upload-select", "E://projetos_sistemas//000-usbase//usbase//src//test//java//org//javaus//usbase//img//beck-long-neck-275ml.png");
+		//p(300);
+   		uploadFileDiskFromWebserve("upload-select", "E://projetos_sistemas//000-usbase//usbase//src//test//java//org//javaus//usbase//img//beck-long-neck-275ml.png");
+   		//p(300);
 		                                                                                                                   	    
 	}
 	

@@ -38,11 +38,12 @@ public class CervejasImpl implements CervejasQueries {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional(readOnly = true) // somente uma transação de leitura
+	@Transactional(readOnly = true) // abrindo uma transação de leitura, se não tiver vai lancar a exception: No transactional EntityManager available
 	public Page<Cerveja> filtrar(CervejaFilter filtro, Pageable pageable) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
 		
 		// remover essa linha para pesquisa funcionar sem paginação
+		// o metodo preparar realiza o calculo, de quais registros virao na proxima pagina
 		paginacaoUtil.preparar(criteria, pageable);
 	
 		adicionarFiltro(filtro, criteria);
@@ -61,6 +62,7 @@ public class CervejasImpl implements CervejasQueries {
 	private void adicionarFiltro(CervejaFilter filtro, Criteria criteria) {
 		if (filtro != null) {
 			if (!StringUtils.isEmpty(filtro.getSku())) {
+				// criteria ja faz Fetch e tras o estilo no consulta
 				criteria.add(Restrictions.eq("sku", filtro.getSku()));
 			}
 			

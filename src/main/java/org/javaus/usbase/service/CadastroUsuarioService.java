@@ -60,7 +60,7 @@ public class CadastroUsuarioService {
 			Usuario tmp = new Usuario();
 			if(usuario.getCodigo() != null){
 				 // recupera usuario do bd
-				 tmp = usuarios.findOne(usuario.getCodigo());
+				 tmp = usuarios.getOne(usuario.getCodigo());
 				 usuario.setSenha(tmp.getSenha());
 				 usuario.setConfirmacaoSenha(tmp.getSenha());
 			}

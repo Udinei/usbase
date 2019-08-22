@@ -34,6 +34,7 @@ public class EstilosImpl implements EstilosQueries {
 	public Page<Estilo> filtrar(EstiloFilter filtro, Pageable pageable) {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Estilo.class);
 		
+		// caso nao queira paginação comentar a linha abaixo
 		paginacaoUtil.preparar(criteria, pageable);
 		adicionarFiltro(filtro, criteria);
 		

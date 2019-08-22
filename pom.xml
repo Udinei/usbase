@@ -1,80 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion> 
- 
+	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.javaus</groupId>
 	<artifactId>usbase</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 
+	<!-- Tipo de empacotamento da app para producao -->
 	<packaging>jar</packaging>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.0.RELEASE</version>
+	</parent>
+
+	<!-- Use <Properties> para alterar as versões dos pacotes da app -->
 	<properties>
+
+		<!-- Encoding codigo -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Encoding relatorios JasperReports -->
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<failOnMissingWebXml>false</failOnMissingWebXml>
-
+		<!-- Java 8 -->
 		<java.version>1.8</java.version>
-		<maven-compiler-pluging.version>3.2</maven-compiler-pluging.version>
-		<flyway-maven-plugin.version>4.0.2</flyway-maven-plugin.version>
-		<mysql-connector-java.version>5.1.39</mysql-connector-java.version>
-
-		<!-- Spring MVC -->
-		<spring-framework.version>4.3.0.RELEASE</spring-framework.version>
-
-		<!-- Servlet API -->
-		<servlet.version>3.1.0</servlet.version>
 
 		<!-- Thymeleaf -->
-		<thymeleaf.version>3.0.1.RELEASE</thymeleaf.version>
-
-		<!-- Bean Validation / Hibernate Validator -->
-		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
+		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
 
 		<!-- Thymeleaf - Layout Dialect -->
-		<thymeleaf-layout-dialect.version>2.0.1</thymeleaf-layout-dialect.version>
-
-		<!-- Logging -->
-		<log4j.version>2.6</log4j.version>
-		<jcl-over-slf4j.version>1.7.21</jcl-over-slf4j.version>
-
-		<!-- JPA / Hibernate -->
-		<hibernate.version>5.1.0.Final</hibernate.version>
-
-		<!-- Spring Data JPA -->
-		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
-
-		<!-- Jackson - JSON -->
-		<jackson-core.version>2.7.5</jackson-core.version>
-
-		<!-- thumbnailator - Gerar Thumbnail -->
-		<!-- https://github.com/coobird/thumbnailator -->
-		<thumbnailator.version>0.4.8</thumbnailator.version>
+		<thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
 
 		<!-- Thymeleaf extras data attribute -->
 		<thymeleaf-extras-data-attribute.version>2.0.1</thymeleaf-extras-data-attribute.version>
 
-		<!-- Cache - Guava -->
-		<guava.version>19.0</guava.version>
-
-		<!-- Apache Bean Utils -->
-		<commons-beanutils.version>1.9.2</commons-beanutils.version>
-
-		<!-- Spring Security -->
-		<spring-security.version>4.1.1.RELEASE</spring-security.version>
-
 		<!-- Thymeleaf - Extras Spring Security -->
-		<thymeleaf-extras-springsecurity4.version>3.0.0.RELEASE</thymeleaf-extras-springsecurity4.version>
+		<thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
 
-		<!-- JUnit -->
-		<junit.version>4.12</junit.version>
-
-		<!-- Java Mail -->
-		<javax.mail.version>1.5.6</javax.mail.version>
-
-		<!-- Apache Commons DBCP -->
-		<commons-dbcp2.version>2.1.1</commons-dbcp2.version>
+		<!-- thumbnailator - Gerar Thumbnail -->
+		<!-- https://github.com/coobird/thumbnailator -->
+		<thumbnailator.version>0.4.8</thumbnailator.version>
 
 		<!-- JasperReports -->
 		<jasperreports.version>6.3.0</jasperreports.version>
@@ -86,43 +54,10 @@
 		<selenium.version>2.53.0</selenium.version>
 
 	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.1.RELEASE</version>
-	</parent>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!-- Para o SLF4J ter soh um binding -->
-			<exclusions>
-				<exclusion>
-					<artifactId>logback-classic</artifactId>
-					<groupId>ch.qos.logback</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
 		<dependency>
@@ -131,82 +66,50 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>com.github.mxab.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-data-attribute</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>${thumbnailator.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$ -->
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-java8</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -219,6 +122,18 @@
 			<version>${jasperreports-fonts.version}</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<version>2.1.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Selenium -->
 		<dependency>
@@ -227,8 +142,8 @@
 			<version>${selenium.version}</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
-		
-        <!-- utilizado no datasource dos testes -->
+
+		<!-- utilizado no datasource dos testes -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -241,14 +156,14 @@
 			<version>1.3.0</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.dbunit</groupId>
 			<artifactId>dbunit</artifactId>
 			<version>2.5.3</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Hamcrest -->
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -257,21 +172,55 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<activatedProperties>dev</activatedProperties>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>test</id>
-			<properties>
-				<activatedProperties>test</activatedProperties>
-			</properties>
-		</profile>
-	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- ao chamar o relatorio o plugin abaixo corrige o erro: java.io.StreamCorruptedException: 
+				invalid stream header: EFBFBDEF -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version> <!--$NO-MVN-MAN-VER$ -->
+				<configuration>
+					<nonFilteredFileExtensions>
+						<nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+						<nonFilteredFileExtension>jasper</nonFilteredFileExtension>
+						<nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+						<nonFilteredFileExtension>woff</nonFilteredFileExtension>
+						<nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+						<nonFilteredFileExtension>eot</nonFilteredFileExtension>
+						<nonFilteredFileExtension>svg</nonFilteredFileExtension>
+					</nonFilteredFileExtensions>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.java</exclude>
+					<exclude>**/*.xml</exclude>
+					<exclude>**/*.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	</build>
+
+
 </project>

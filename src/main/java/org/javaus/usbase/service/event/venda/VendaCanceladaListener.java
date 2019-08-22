@@ -32,7 +32,7 @@ public class VendaCanceladaListener extends VendaEvent {
 
 			// percorre os itens da venda
 			for(ItemVenda item : vendaEvent.getVenda().getItens()){
-					Cerveja cerveja = cervejas.findOne(item.getCerveja().getCodigo());
+					Cerveja cerveja = cervejas.getOne(item.getCerveja().getCodigo());
 					
 					// para cada item soma ao estoque a quantidade da venda cancelada
 					cerveja.setQuantidadeEstoque(cerveja.getQuantidadeEstoque() + item.getQuantidade());

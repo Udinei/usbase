@@ -7,6 +7,7 @@
 	  xmlns:usbase="http://usbase.javaus.org">
 <head>
  		<title> Cadastro de cerveja </title>
+ 		<!-- upload.min.css do UIKIT component -->
 		<link rel="stylesheet"  th:href="@{/stylesheets/vendors/upload.min.css}"/>
 		
 </head>
@@ -38,16 +39,12 @@
     		
 			<form method="POST" th:object="${cerveja}" class="form-vertical  js-form-loading"
 			    th:action="${cerveja.nova} ? @{/cervejas/nova} : @{/cervejas/{codigo}(codigo=${cerveja.codigo})}" >
-		
-               <!-- 		
-				<th:block th:include="fragments/MensagensSucesso"></th:block>
-				<th:block th:include="fragments/MensagensErroValidacao"></th:block>
-				O codigo acima foi substituido pelo codigo logo abaixo, com customizacao da tag th:block
-				e th:include para exibição generica de mensagens
-				 -->
 				 
+				 <!-- se codigo estiver presente sera feito um update, caso contrario sera um novo registro -->
 				 <input type="hidden" th:field="*{codigo}" />
 				 
+				 <!-- O elemento <usbase:message/> ira exibir mensagens de erro e de sucesso 
+				 no lugar de th:block, implementado na classe -> MessageElementTagProcessor -->
 				 <usbase:message/>
 
 				<div class="row">
@@ -150,10 +147,12 @@
 				  	  
 				  	  <div class="js-container-foto-cerveja" th:attr="data-url-fotos=@{/fotos}">
 					  	  	<div id="upload-drop" class="bw-upload"  >
-					  	  		<img th:src="@{/images/mini-loading.gif}" class="js-img-loading hidden">
+					  	  		<img class="js-img-loading hidden" th:src="@{/images/mini-loading.gif}" >
 						  	  	<i class="glyphicon  glyphicon-cloud-upload"></i>
 						  	  	<span>Arraste a foto aqui ou</span>
-						  	  	<a class="bw-upload-form-file">Selecione <input id="upload-select" type="file" accept=".jpg,.jpeg,.png"/> </a>
+						  	  	<a class="bw-upload-form-file">Selecione 
+						  	  	     <input id="upload-select" type="file" accept=".jpg,.jpeg,.png"/>
+						  	  	</a>
 					  	  	</div>
 				  	  </div>
 				  	  	

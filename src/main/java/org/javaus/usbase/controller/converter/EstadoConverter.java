@@ -1,10 +1,11 @@
 package org.javaus.usbase.controller.converter;
 
+import org.javaus.usbase.model.Estado;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import org.javaus.usbase.model.Estado;
-
+@Component
 public class EstadoConverter implements Converter<String, Estado> {
 
 	@Override

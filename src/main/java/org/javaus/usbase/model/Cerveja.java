@@ -19,16 +19,16 @@ import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.util.StringUtils;
-
 import org.javaus.usbase.repository.listener.CervejaEntityListener;
 import org.javaus.usbase.validation.SKU;
+import org.springframework.util.StringUtils;
 
-@EntityListeners(CervejaEntityListener.class) // listener para carregar o thumbnail da foto ao pesquisar
+//listener para setar urlThumbnailFoto (url do thumbnail) ao recuperar a foto na pesquisa
+@EntityListeners(CervejaEntityListener.class) 
 @Entity
 @Table(name="cerveja")
 public class Cerveja {
@@ -38,13 +38,13 @@ public class Cerveja {
 	private Long codigo;
 	
 	@SKU
-	@NotBlank // anotação do bean validation implementada pelo hibernate validator
+	@NotBlank // anotação do bean validation implementada pelo javax.validation
 	private String sku;
 	
 	@NotBlank
 	private String nome;
 	
-	@NotBlank(message = "A descrição é obrigatoria")
+	@NotBlank(message = "A descrição é obrigatória")
 	@Size(max = 50, message = "O tamanho da descrição deve estar entre 1 e 50") // controla a quantidade de caracter digitado no campo
 	private String descricao;
 	

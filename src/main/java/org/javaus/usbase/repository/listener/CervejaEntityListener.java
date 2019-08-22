@@ -11,9 +11,10 @@ import org.javaus.usbase.model.Cerveja;
 import org.javaus.usbase.storage.FotoStorage;
 
 /** Classe que fica escutando a entidade Cerveja, para quando toda vez que essa entidade for carregada
- *  do banco de dados tambem recupere a url do thumbnail da foto, que sera utilizada ao pesquisar uma 
+ *  do banco de dados tambem recupere e set a url do thumbnail da foto, que sera utilizada ao pesquisar uma 
  *  cerveja;
  *  Essa classe nao e iniciado pelo Spring mas pelo JPA  */
+
 @Component
 public class CervejaEntityListener {
 

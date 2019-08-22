@@ -2,16 +2,23 @@ var UsBase = UsBase || {};
 
 UsBase.UploadFoto = (function(){
 		
-	function UploadFoto(){   // funcao construtora inicializacao de variaveis
-		this.inputNomeFoto = $('input[name=foto]');  // acessando elementos hidden do html
+	// funcao construtora
+	function UploadFoto(){   
+		
+		//inicializacao de atributos(variaveis)
+		// acessando elementos hidden da foto contidos no html do cadastro de cerveja
+		this.inputNomeFoto = $('input[name=foto]'); 
 		this.inputContentType = $('input[name=contentType]');
 		this.novaFoto = $('input[name=novaFoto]');
 		this.inputUrlFoto = $('input[name=urlFoto]');
 		
-
-		this.htmlFotoCervejaTemplate = $('#foto-cerveja').html(); 		// obtendo html template com codigo do handlebars
+		
+		// recuperando html template html com codigo do handlebars, inserido no cadastro de cerveja
+		// por <th:block th:replace="hbs/FotoCerveja"></th:block>
+		this.htmlFotoCervejaTemplate = $('#foto-cerveja').html(); 		
 		this.template = Handlebars.compile(this.htmlFotoCervejaTemplate); // compilando template handlebar
 		
+		// div onde sera exido a foto do cerveja
 		this.containerFotoCerveja = $('.js-container-foto-cerveja');
 		
 		this.uploadDrop = $('#upload-drop');
@@ -20,37 +27,44 @@ UsBase.UploadFoto = (function(){
 	}
 	
 	
-	// essa funcao sera executada quando voltar da validacao no servidor
-	UploadFoto.prototype.iniciar = function (){  // funcao de execucao do comportamento
-	
+	// Esse metodo é executado ao voltar do servidor, apos clicar em salvar
+	// funcao de execucao de comportamento ao selecionar a foto para dentro do componente do UIkit
+	UploadFoto.prototype.iniciar = function (){  
+	        
+		    // Ao clicar em salvar seta os parametros do upload da foto em settings (objeto usado pelo UIkit) que sera enviado via Ajax 
 			var settings = {
-				type: 'json',
+				type: 'json',    // formato do envio JSON
 				filelimit: 1,   // quantidade de arquivos que sera enviados de uma vez
-				allow: '*.(jpg|jpeg|png)',   // tipos de arquivos que esta sendo enviado contentType
-				action: this.containerFotoCerveja.data('url-fotos'),  // a url de action a ser enviada, vem do atributo data-url-fotos adicionada na div 
-				complete: onUploadCompleto.bind(this), // o atributo complete, recebera o retorno que vira do servidor, .bind(this) da acesso a todas var. declarada na funcao contrutora
-				beforeSend: adicionarCsrfToken,    // antes de executar o envio do ajax
+				allow: '*.(jpg|jpeg|png)',   // tipos de arquivos permitidos enviar no contentType
+				action: this.containerFotoCerveja.data('url-fotos'),  // mapeamento do metodo a ser executado no controler, para tanto foi adicionando na div o atributo (th:attr="data-url-fotos=@{/fotos}) 
+				complete: onUploadCompleto.bind(this), // ao completar o envio da foto executa o metodo 
+				beforeSend: adicionarCsrfToken,    // evitando ataque de um clique CSRF
 				loadstart: onLoadStart.bind(this)
 	        }
 			
-			
+			// Executa quando a foto foi selecionada, enviando-a para o servidor via Ajax
 			UIkit.uploadSelect($('#upload-select'), settings);
-						
+			
+            // Executa quando a foto foi arrastada e enviando-a para o servidor via Ajax 						
 			UIkit.uploadDrop(this.uploadDrop, settings);
 			
 			// Apos a validacao dos campos da tela, se usuario já selecionou uma foto, o campo urlFoto (hidden) foi preenchido 
 			// entao carrega a foto novamente usando a url contida no campo urlFoto 
 			if(this.inputNomeFoto.val()){
-				renderizarFoto.call(this, {  // call e this, forca para que funcao seja executada no context da funcao
-						nome: this.inputNomeFoto.val(),
-						contentType: this.inputContentType.val(),
-						url: this.inputUrlFoto.val()});  // obtem a url da foto, carregada anteriormente
+				// call força acesso a todo contexto da classe 
+				renderizarFoto.call(
+						this, {  // call e this, forca para que funcao seja executada no context da funcao
+								nome: this.inputNomeFoto.val(),
+								contentType: this.inputContentType.val(),
+								url: this.inputUrlFoto.val() // obtem a url da foto, carregada anteriormente
+						       }
+				);  
 			}
 			
 	}
 	 
 	function onLoadStart(){
-		this.imgLoading.removeClass('hidden');
+		this.imgLoading.removeClass('hidden'); // exibe icone de animação carregando imagem
 		
 	}
 	
@@ -59,7 +73,7 @@ UsBase.UploadFoto = (function(){
 	function onUploadCompleto(resposta){  
 		this.novaFoto.val('true');
 		this.inputUrlFoto.val(resposta.url); // obtem a url da foto
-		this.imgLoading.addClass('hidden');
+		this.imgLoading.addClass('hidden'); // esconde animação de carregando imagem
 		renderizarFoto.call(this,resposta);  
 		
 	}
@@ -88,14 +102,14 @@ UsBase.UploadFoto = (function(){
 	}
 	
 	function onRemoverFoto(){
-		$('.js-foto-cerveja').remove();
+		$('.js-foto-cerveja').remove(); // remove trecho html inserido pelo handerbar
 		this.uploadDrop.removeClass('hidden') // exibe novamente a div upload-drop que contem o link de selecao da foto
 		this.inputNomeFoto.val('');  
 		this.inputContentType.val('');
 		this.novaFoto.val('false');
 	}
 	
-	// adicionando o token do csrf na requisicao
+	// adicionando a proteção de um click  na requisicao (token do csrf)
 	function adicionarCsrfToken(xhr){
 		var token = $('input[name=_csrf]').val();  // pegando o input pelo atributo name
 		var header = $('input[name=_csrf_header').val();
@@ -107,7 +121,7 @@ UsBase.UploadFoto = (function(){
 })();
 
 
- $(function(){  // executa uma funcao "metodo" da classe UsBase
+ $(function(){  // apos carregar pagina executa o metodo iniciar da classe UsBase
 	var uploadFoto = new UsBase.UploadFoto();
 	uploadFoto.iniciar();
  });
