@@ -40,4 +40,6 @@ Sistema de vendas como projeto de pesquisa e análise da integração de várias
  - test
 
 # Diagrama de classe do Sistema
-![](/Diagrama-de-classe-nsbase.png)
+![](/Diagrama-de-classe-nsbase.png
+
+Imagem: Curso Spring Framework Expert ministrado pela Algaworks.
