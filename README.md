@@ -1,5 +1,5 @@
 # usbase
-Sistema de vendas como projeto de pesquisa e análise da integração de várias tecnologias.
+Sistema UsBase, um sistema open source de vendas feito em Java, desenvolvido no curso “Spring Framework Expert” que fiz na empresa Algaworks, nesse sistema fiz melhorias de funcionalidades, desenvolvi documentação e corrigi vários bugs, e implementei 98% dos testes de aceitação usando Milenium WebDriver. Sistema de vendas como projeto de pesquisa e análise da integração de várias tecnologias.
 
 # Stack
   - Java 8
