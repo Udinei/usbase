@@ -1,13 +1,13 @@
 # usbase
-Projeto de pesquisa e analise das tecnologias: Spring 5, Java, Tymeleaf, Spring Boot 2, Bootstrap, MySql..etc
+Sistema de vendas como projeto de pesquisa e análise da integração de várias tecnologias.
 
 # Stack
   - Java 8
   - Spring boot 2
-  - Tymeleaf
+  - Tymeleaf 
   - Bootstrap 3.0
   - MySql 5.6
-  - Flaway
+  - Flyway
 
 # Estrutura do projeto
 - src
