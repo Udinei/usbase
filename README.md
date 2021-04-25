@@ -38,3 +38,6 @@ Sistema de vendas como projeto de pesquisa e análise da integração de várias
 	WEB-INF
  - validation
  - test
+
+# Diagrama de classe do Sistema
+![]Diagrama-de-classe.png
