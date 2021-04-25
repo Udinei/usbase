@@ -40,4 +40,4 @@ Sistema de vendas como projeto de pesquisa e análise da integração de várias
  - test
 
 # Diagrama de classe do Sistema
-![](Diagrama-de-classe.png)
+![](/Diagrama-de-classe.png)
