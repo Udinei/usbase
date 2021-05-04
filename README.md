@@ -23,7 +23,7 @@ Sistema UsBase, um sistema open source de vendas feito em Java, desenvolvido no 
 	- service
 	- session
 	- storage
-	- thymelead
+	- thymeleaf
 	- util
   - resurces
   - META-INF
